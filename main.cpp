@@ -93,6 +93,7 @@ int main() {
         glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
         std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
+    free((void*)vertexShaderSource);
 
     unsigned int fragmentShader;
     fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -103,6 +104,7 @@ int main() {
         glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
         std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
+    free((void*)fragmentShaderSource);
 
     unsigned int shaderProgram;
     shaderProgram = glCreateProgram();
@@ -133,10 +135,6 @@ int main() {
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-
-    // cleanup
-    free((void*)vertexShaderSource);
-    free((void*)fragmentShaderSource);
 
     glfwTerminate();
     return 0;
