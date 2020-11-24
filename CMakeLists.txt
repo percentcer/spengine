@@ -3,7 +3,7 @@ project(learnopengl)
 
 set(CMAKE_CXX_STANDARD 14)
 
-if (MACOS)
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	link_directories(/usr/local/lib)
 	include_directories(/usr/local/include)
 elseif(WIN32)
@@ -13,7 +13,7 @@ endif()
 
 add_executable(learnopengl main.cpp glad.c)
 
-if (MACOS)
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	target_link_libraries(learnopengl glfw)
 elseif(WIN32)
 	target_link_libraries(learnopengl glfw3)
