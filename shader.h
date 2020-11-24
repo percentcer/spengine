@@ -125,4 +125,8 @@ public:
         const unsigned int loc = glGetUniformLocation(PROGRAM_ID, name);
         glUniform1f(loc, value);
     }
+    void setMat4(const char *name, const float* value) {
+        const unsigned int loc = glGetUniformLocation(PROGRAM_ID, name);
+        glUniformMatrix4fv(loc, 1, GL_FALSE, value);
+    }
 };

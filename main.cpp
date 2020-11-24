@@ -1,6 +1,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include <iostream>
 
 #include <stdio.h>
@@ -87,6 +91,8 @@ int main() {
     shader.setInt("tex0", 0);
     shader.setInt("tex1", 1);
 
+    glm::mat4 transform = glm::mat4(1.0f);
+
     while(!glfwWindowShouldClose(window)) {
         processInput(window);
 
@@ -97,7 +103,10 @@ int main() {
         shader.activate();
         shader.setFloat("scaling", scalt);
         shader.setFloat("iTime", timeValue);
-        shader.setFloat("xOffset", sin(timeValue));
+        shader.setFloat("xOffset", 0.f);//sin(timeValue));
+
+        transform = glm::rotate(transform, .001f, glm::vec3(0.f, 0.f, 1.f));
+        shader.setMat4("transform", glm::value_ptr(transform));
         
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, tex0);
