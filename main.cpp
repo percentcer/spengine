@@ -66,55 +66,13 @@ int main() {
 
     Shader shader{"res/shaders/main.vert", "res/shaders/main.frag"};
 
-    //loadShader("shaders/main.vert", &vertexShaderSource);
-    //loadShader("shaders/main.frag", &fragmentShaderSource);
-    //loadShader("shaders/shadetober/ripe.frag", &fragmentShaderSource);
-
-    // unsigned int vertexShader;
-    // vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    // glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    // glCompileShader(vertexShader);
-    // int success;
-    // char infoLog[512];
-    // glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    // if(!success){
-    //     glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-    //     std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-    // }
-    // free((void*)vertexShaderSource);
-
-    // unsigned int fragmentShader;
-    // fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    // glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    // glCompileShader(fragmentShader);
-    // glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    // if(!success) {
-    //     glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-    //     std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-    // }
-    // free((void*)fragmentShaderSource);
-
-    // unsigned int shaderProgram;
-    // shaderProgram = glCreateProgram();
-    // glAttachShader(shaderProgram, vertexShader);
-    // glAttachShader(shaderProgram, fragmentShader);
-    // glLinkProgram(shaderProgram);
-    // glDeleteShader(vertexShader);
-    // glDeleteShader(fragmentShader);
-
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, NUM_VERT_ELEMENTS * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, NUM_VERT_ELEMENTS * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
         
-    //int vertexColorLocation = glGetUniformLocation(shaderProgram, "scaling");
-    //int timeLocation = glGetUniformLocation(shaderProgram, "iTime");
-    //int resolutionLocation = glGetUniformLocation(shaderProgram, "iResolution");
-
     float res[] = {SCR_WIDTH, SCR_HEIGHT};
     shader.activate();
-
-    //glUniform2fv(resolutionLocation, 1, res);
 
     while(!glfwWindowShouldClose(window)) {
         processInput(window);
