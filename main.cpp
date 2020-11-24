@@ -64,7 +64,7 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    Shader shader{"shaders/main.vert", "shaders/main.frag"};
+    Shader shader{"res/shaders/main.vert", "res/shaders/main.frag"};
 
     //loadShader("shaders/main.vert", &vertexShaderSource);
     //loadShader("shaders/main.frag", &fragmentShaderSource);
