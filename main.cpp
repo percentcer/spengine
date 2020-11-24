@@ -7,8 +7,7 @@
 #include <stdlib.h>
 #include <cmath>
 
-const char *vertexShaderSource;
-const char *fragmentShaderSource;
+#include "shader.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -16,20 +15,6 @@ void processInput(GLFWwindow *window);
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
-
-void loadShader(const char* fn, const char** store) {
-    FILE *f = fopen(fn, "rb");
-    fseek(f, 0, SEEK_END);
-    long fsize = ftell(f);
-    rewind(f);
-
-    char* result = (char*)malloc(fsize + 1);
-    fread(result, 1, fsize, f);
-    fclose(f);
-    result[fsize] = 0;
-
-    *store = result;
-}
 
 int main() {
     glfwInit();
@@ -57,10 +42,10 @@ int main() {
 
     glClearColor(.2f, .6f, .8f, 1.f);
 
-    float vertices[] = {.5f, .5f, 0.f,
-                        .5f, -.5f, 0.f,
-                        -.5f, -.5f, 0.f,
-                        -.5f, .5f, 0.f};
+    float vertices[] = {.5f, .5f, 0.f, 1.f, 0.f, 0.f,
+                        .5f, -.5f, 0.f, 0.f, 1.f, 0.f,
+                        -.5f, -.5f, 0.f, 0.f, 0.f, 1.f,
+                        -.5f, .5f, 0.f, 1.f, 0.f, 1.f,};
     unsigned int indices[] = {
             0, 1, 3,
             1, 2, 3
@@ -79,55 +64,69 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    loadShader("shaders/main.vert", &vertexShaderSource);
-    loadShader("shaders/main.frag", &fragmentShaderSource);
+    Shader shader{"shaders/main.vert", "shaders/main.frag"};
 
-    unsigned int vertexShader;
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
-    int success;
-    char infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if(!success){
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-    }
-    free((void*)vertexShaderSource);
+    //loadShader("shaders/main.vert", &vertexShaderSource);
+    //loadShader("shaders/main.frag", &fragmentShaderSource);
+    //loadShader("shaders/shadetober/ripe.frag", &fragmentShaderSource);
 
-    unsigned int fragmentShader;
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if(!success) {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-    }
-    free((void*)fragmentShaderSource);
+    // unsigned int vertexShader;
+    // vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    // glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+    // glCompileShader(vertexShader);
+    // int success;
+    // char infoLog[512];
+    // glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    // if(!success){
+    //     glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+    //     std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+    // }
+    // free((void*)vertexShaderSource);
 
-    unsigned int shaderProgram;
-    shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
+    // unsigned int fragmentShader;
+    // fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    // glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+    // glCompileShader(fragmentShader);
+    // glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+    // if(!success) {
+    //     glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+    //     std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+    // }
+    // free((void*)fragmentShaderSource);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    // unsigned int shaderProgram;
+    // shaderProgram = glCreateProgram();
+    // glAttachShader(shaderProgram, vertexShader);
+    // glAttachShader(shaderProgram, fragmentShader);
+    // glLinkProgram(shaderProgram);
+    // glDeleteShader(vertexShader);
+    // glDeleteShader(fragmentShader);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, NUM_VERT_ELEMENTS * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, NUM_VERT_ELEMENTS * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
         
-    int vertexColorLocation = glGetUniformLocation(shaderProgram, "scaling");
+    //int vertexColorLocation = glGetUniformLocation(shaderProgram, "scaling");
+    //int timeLocation = glGetUniformLocation(shaderProgram, "iTime");
+    //int resolutionLocation = glGetUniformLocation(shaderProgram, "iResolution");
+
+    float res[] = {SCR_WIDTH, SCR_HEIGHT};
+    shader.activate();
+
+    //glUniform2fv(resolutionLocation, 1, res);
 
     while(!glfwWindowShouldClose(window)) {
         processInput(window);
 
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(shaderProgram);
         float timeValue = glfwGetTime();
         float scalt = (sin(timeValue) / 2.0f) + 1.f;
-        glUniform1f(vertexColorLocation, scalt);
+        shader.activate();
+        shader.setFloat("scaling", scalt);
+        shader.setFloat("iTime", timeValue);
+        shader.setFloat("xOffset", sin(timeValue));
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
