@@ -1,0 +1,1937 @@
+{
+    "userName": "percentcer",
+    "date": "2020-05-15T17:35:49.561Z",
+    "numShaders": 44,
+    "shaders": [
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "Wt33RX",
+       "date": "1576969282",
+       "viewed": 8,
+       "name": "#define mainImage experiment",
+       "description": "Trying to understand the implications of #define mainImage",
+       "likes": 0,
+       "published": "Unlisted",
+       "tags": [
+        "shadertoy",
+        "define"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "#if 0\nvoid mainImage(out vec4 c, in vec2 u) { c = c.wxxw; } // red\n#else\n#define mainImage(O,u) O = O.xxww // blue\n#endif",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "3s3XRr",
+       "date": "1578285275",
+       "viewed": 0,
+       "name": "Approximate tangent space",
+       "description": "Tangent spaces, how do they work",
+       "likes": 0,
+       "published": "Unlisted",
+       "tags": [
+        "normals",
+        "tangent"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [
+         {
+          "id": "4dXGRn",
+          "filepath": "/media/a/10eb4fe0ac8a7dc348a2cc282ca5df1759ab8bf680117e4047728100969e7b43.jpg",
+          "type": "texture",
+          "channel": 0,
+          "sampler": {
+           "filter": "mipmap",
+           "wrap": "repeat",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         }
+        ],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "float height(vec2 uv) {\n    return texture(iChannel0, uv).r;\n}\n\nvec2 grad(vec2 uv) {\n    vec2 ep = vec2(0.01, 0.);\n    return normalize(\n        height(uv) - \n        vec2(height(uv - ep.xy), height(uv - ep.yx))\n    );\n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    #if 0\n    vec2 uv = fragCoord/iResolution.xy;\n    vec3 col = normalize(vec3(-grad(uv), 1.));\n    fragColor = vec4(col, 1.0);\n    #else\n    // from https://www.shadertoy.com/view/4lfSD8\n    float pstr = 2.0;\n    \n    float tstep = 1.0;\n    \n    float ux = tstep / iChannelResolution[0].x;\n    float uy = tstep / iChannelResolution[0].y;\n    //\n    \n    vec2 uv[9];\n    float itn[9];\n    \n    // 0 1 2\n    // 3 4 5\n    // 6 7 8\n    \n    uv[0] = vec2(-ux, -uy);\n    uv[1] = vec2(0, -uy);\n    uv[2] = vec2(ux, -uy);\n    \n    uv[3] = vec2(-ux, 0);\n  \tuv[4] = vec2(0, 0);\n    uv[5] = vec2(ux, 0);\n    \n    uv[6] = vec2(-ux, uy);\n    uv[7] = vec2(0, uy);\n    uv[8] = vec2(ux, uy);\n    \n    for(int i = 0; i < 9; i++)\n    {\n        uv[i] += fragCoord / iChannelResolution[0].xy;\n        uv[i].y = uv[i].y;\n        vec3 col = texture(iChannel0, uv[i]).rgb;\n        itn[i] = 1.0 - (col.r + col.g + col.b) * .333333;\n    }\n    \n    float nstep = 2.0;\n   \n    float nx = (itn[2] + (nstep * itn[5]) + itn[8]) - (itn[0] + (nstep * itn[3]) + itn[6]);\n    float ny = (itn[6] + (nstep * itn[7]) + itn[8]) - (itn[0] + (nstep * itn[1]) + itn[2]);\n    \n    float hx = (itn[2] + -0.25*itn[5] + itn[8]) - (itn[0] + -0.25*itn[3] + itn[6]);\n    float hy = (itn[6] + -0.25*itn[7] + itn[8]) - (itn[0] + -0.25*itn[1] + itn[2]);\n    \n    float dx = (hx + nx) / pstr;\n    float dy = (hy + ny) / pstr;\n    \n    float dz = 1.0 / pstr;\n    \n    float dstep = 0.25;\n    fragColor = normalize(vec4(dx+dstep, dy+dstep, dz, 0.0));\n    #endif\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "wtySRK",
+       "date": "1583114024",
+       "viewed": 46,
+       "name": "Demo for Xabdro",
+       "description": "Don't give up my dude!",
+       "likes": 0,
+       "published": "Unlisted",
+       "tags": [
+        "audio"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [
+         {
+          "id": "4tjGRw",
+          "filepath": "https://soundcloud.com/above-6/above-beyond-bbc-radio-1",
+          "type": "musicstream",
+          "channel": 0,
+          "sampler": {
+           "filter": "linear",
+           "wrap": "clamp",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 0
+         }
+        ],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "void mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from 0 to 1)\n    // Some additional work to fix the aspect ratio and change\n    // the center point of the coordinate system\n    // to be in the middle of the screen instead of\n    // bottom left\n    vec2 uv = fragCoord/iResolution.xy;\n    uv -= 0.5;\n    uv.x *= iResolution.x/iResolution.y;\n    \n    // for any point on the screen, how far is it from the origin\n    float distanceToUnitSphere = length(uv);\n    \n    // sample the music channel along the x coordinates to get a sound wave\n    // (note that we undo the prior origin shifting because the audio wave data\n    // starts at 0)\n    float radiusScaling = texture(iChannel0, vec2(uv.x + 0.5)).r;\n        \n    // stepped to produce a clear \"edge\" to the circle\n    float distortedCircle = step(0.5 * radiusScaling, distanceToUnitSphere);    \n\n    // Output to screen\n    vec3 col = vec3(distortedCircle);\n    fragColor = vec4(col,1.0);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "wsSyD3",
+       "date": "0",
+       "viewed": 0,
+       "name": "Mandala Explorations",
+       "description": "Playing around with radial repetition",
+       "likes": 0,
+       "published": "Private",
+       "tags": [
+        "radialrepetition"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "#define PI 3.141\n#define FAR 100.\n\nvec2 toPolar(in vec2 cart) {\n    return vec2(length(cart), atan(cart.y, cart.x));\n}\n\nvec2 toCartesian(in vec2 polar) {\n    return vec2(cos(polar.y) * polar.x, sin(polar.y) * polar.x);\n  }\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from 0 to 1)\n    vec2 uv = (-iResolution.xy + fragCoord*2.)/iResolution.y;\n    vec2 pol = toPolar(uv);\n    vec2 rep = mod(pol, vec2(FAR, PI / 6.));//floor(12.*fract(iTime))));\n    uv = toCartesian(rep);\n\n    // Time varying pixel color\n    //vec3 col = vec3(step(.1, length(uv + vec2(0.5, 0.))));\n    vec3 col = vec3(rep.y);\n\n    // Output to screen\n    fragColor = vec4(col,1.0);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "Ms2yzm",
+       "date": "1491472712",
+       "viewed": 4,
+       "name": "SDF Pie Exploration",
+       "description": "Testing SDF pie function stuff",
+       "likes": 0,
+       "published": "Unlisted",
+       "tags": [
+        "sdf"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "//////////////////////////////////////\n// Combine distance field functions //\n//////////////////////////////////////\n\n\nfloat smoothMerge(float d1, float d2, float k)\n{\n    float h = clamp(0.5 + 0.5*(d2 - d1)/k, 0.0, 1.0);\n    return mix(d2, d1, h) - k * h * (1.0-h);\n}\n\n\nfloat merge(float d1, float d2)\n{\n\treturn min(d1, d2);\n}\n\n\nfloat mergeExclude(float d1, float d2)\n{\n\treturn min(max(-d1, d2), max(-d2, d1));\n}\n\n\nfloat substract(float d1, float d2)\n{\n\treturn max(-d1, d2);\n}\n\n\nfloat intersect(float d1, float d2)\n{\n\treturn max(d1, d2);\n}\n\n\n//////////////////////////////\n// Rotation and translation //\n//////////////////////////////\n\n\nvec2 rotateCCW(vec2 p, float a)\n{\n\tmat2 m = mat2(cos(a), sin(a), -sin(a), cos(a));\n\treturn p * m;\t\n}\n\n\nvec2 rotateCW(vec2 p, float a)\n{\n\tmat2 m = mat2(cos(a), -sin(a), sin(a), cos(a));\n\treturn p * m;\n}\n\n\nvec2 translate(vec2 p, vec2 t)\n{\n\treturn p - t;\n}\n\n\n//////////////////////////////\n// Distance field functions //\n//////////////////////////////\n\n\nfloat pie(vec2 p, float angle)\n{\n\tangle = radians(angle) / 2.0;\n\tvec2 n = vec2(cos(angle), sin(angle));\n\treturn abs(p).x * n.x + p.y*n.y;\n}\n\n\nfloat circleDist(vec2 p, float radius)\n{\n\treturn length(p) - radius;\n}\n\n\nfloat triangleDist(vec2 p, float radius)\n{\n\treturn max(\tabs(p).x * 0.866025 + \n\t\t\t   \tp.y * 0.5, -p.y) \n\t\t\t\t-radius * 0.5;\n}\n\n\nfloat triangleDist(vec2 p, float width, float height)\n{\n\tvec2 n = normalize(vec2(height, width / 2.0));\n\treturn max(\tabs(p).x*n.x + p.y*n.y - (height*n.y), -p.y);\n}\n\n\nfloat semiCircleDist(vec2 p, float radius, float angle, float width)\n{\n\twidth /= 2.0;\n\tradius -= width;\n\treturn substract(pie(p, angle), \n\t\t\t\t\t abs(circleDist(p, radius)) - width);\n}\n\n\nfloat boxDist(vec2 p, vec2 size, float radius)\n{\n\tsize -= vec2(radius);\n\tvec2 d = abs(p) - size;\n  \treturn min(max(d.x, d.y), 0.0) + length(max(d, 0.0)) - radius;\n}\n\n\nfloat lineDist(vec2 p, vec2 start, vec2 end, float width)\n{\n\tvec2 dir = start - end;\n\tfloat lngth = length(dir);\n\tdir /= lngth;\n\tvec2 proj = max(0.0, min(lngth, dot((start - p), dir))) * dir;\n\treturn length( (start - p) - proj ) - (width / 2.0);\n}\n\n\n///////////////////////\n// Masks for drawing //\n///////////////////////\n\n\nfloat fillMask(float dist)\n{\n\treturn clamp(-dist, 0.0, 1.0);\n}\n\n\nfloat innerBorderMask(float dist, float width)\n{\n\t//dist += 1.0;\n\tfloat alpha1 = clamp(dist + width, 0.0, 1.0);\n\tfloat alpha2 = clamp(dist, 0.0, 1.0);\n\treturn alpha1 - alpha2;\n}\n\n\nfloat outerBorderMask(float dist, float width)\n{\n\t//dist += 1.0;\n\tfloat alpha1 = clamp(dist, 0.0, 1.0);\n\tfloat alpha2 = clamp(dist - width, 0.0, 1.0);\n\treturn alpha1 - alpha2;\n}\n\n\n///////////////\n// The scene //\n///////////////\n\n\nfloat sceneDist(vec2 p)\n{\t\n    // just the pie please\n    p = translate(p, vec2(iResolution.xy / 2.0));\n    float r1 = 45.;\n    float r2 = 60.;\n    float r3 = 90.;\n    \n    vec2 p1 = p;\n    float offset_a = r1 + abs(r2 - r1)/2.;\n    vec2 p2 = rotateCCW(p, radians(offset_a));\n    float offset_b = (r1 + r2) + abs(r3 - (r1 + r2));\n    vec2 p3 = rotateCCW(p, radians(offset_b));\n    \n    float pp1 = pie(p1, r1);\n    float pp2 = pie(p2, r2);\n    float pp3 = pie(p3, r3);\n    \n    float m = merge(pp1, pp2);\n    return merge(m, pp3);\n}\n\n\n/////////////////\n// The program //\n/////////////////\n\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n\tvec2 p = fragCoord.xy + vec2(0.5);\n\tvec2 c = iResolution.xy / 2.0;\n\t\n\tfloat dist = sceneDist(p);\n\t\n\t// gradient\n\tvec4 col = vec4(0.5, 0.5, 0.5, 1.0) * (1.0 - length(c - p)/iResolution.x);\n\t// grid\n\tcol *= clamp(min(mod(p.y, 10.0), mod(p.x, 10.0)), 0.9, 1.0);\n\t// shape fill\n\tcol = mix(col, vec4(1.0, .7, .0, 1.0), fillMask(dist));\n\t// shape outline\n\t//col = mix(col, vec4(.0, 0.8, 1.0, 1.0), innerBorderMask(dist, 6.5));\n\n\tfragColor = clamp(col, 0.0, 1.0);\n}\n",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "ltGXDy",
+       "date": "1485690262",
+       "viewed": 521,
+       "name": "baby's first metaballs",
+       "description": "offsetting the radius for extra blobiness",
+       "likes": 8,
+       "published": "Public API",
+       "tags": [
+        "2d",
+        "metaball"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "void mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    const int kNum = 4;\n    float sum_of_influence = 0.;\n    \n    for (int i = 0; i < kNum; ++i)\n    {\n        float idx = float(i+1);\n        \n        vec2 position = vec2(\n            //            \"wiggliness\"                             |   15% of the screen   |  start at the ctr\n            (cos(iTime * 0.5) + cos(iTime * idx * .3)) * (iResolution.x * .17) + iResolution.x / 2.,\n            (sin(iTime * 0.3) + sin(iTime * idx * .7)) * (iResolution.y * .15) + iResolution.y / 2.\n            );\n        float radius = (iResolution.x * .01) * idx;\n        float dist = distance(fragCoord.xy, position);\n        \n        // wiggle the distance to the ball based on direction of ball to point\n        vec2 direction = normalize(fragCoord.xy - position);\n        float angle = atan(direction.y, direction.x);\n        float perimeter_offset = sin(angle * 7.) + sin((iTime + angle) * 3. * idx);\n        radius += perimeter_offset * (radius * .1); // at most 10% adjustment\n        \n        float influence = radius / dist;\n        \n        sum_of_influence += influence;\n    }\n    \n    // this creates a pulsing external color with a sharp falloff\n    float pulse = abs(sin(iTime)) * 10. + 4.;\n    float color = pow(sum_of_influence, pulse);\n    \n    if (color <= 1.)\n    {\n        // base color is a function of how close you are to being \"inside\" a metaball\n        // left and right make you more blue, up and down make you more red\n        vec2 st = fragCoord.xy / iResolution.xy;\n        fragColor = vec4(\n            color * (1. - (abs(st.x - .5) / .5)),\n            0.,\n            color * (1. - (abs(st.y - .5) / .5)),\n            1.0);\n    }\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "XtyXWK",
+       "date": "1485908353",
+       "viewed": 56,
+       "name": "clockyballs",
+       "description": "Making a ten second clock out the previous metaball code",
+       "likes": 0,
+       "published": "Public API",
+       "tags": [
+        "metaballs"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "void mainImage( out vec4 fragColor, in vec2 fragCoord ){\n    float sum = 0.;\n    float seconds = floor(mod(iTime, 10.));\n    for(float sec = 0.; sec < 10.; ++sec) {\n        if(sec != seconds) { continue; }\n        for(float dotid = 0.; dotid < 81.; ++dotid) {\n            float offset = 1. / (sec * 2.);\n\n            vec2 stPos = vec2(\n                fract(float(dotid) / sec),\n                floor(float(dotid) / sec) / sec\n            ) + offset;\n            vec2 stFrag = fragCoord.xy / iResolution.xy;\n\n            // scale by aspect ratio and translate it to center\n            float aspect = iResolution.x / iResolution.y;\n            stFrag.x *= aspect;\n            stFrag.x -= (1. - 1. / aspect);\n\n            float stDist = distance(stFrag, stPos);\n\n            float pulse = .75 + .5 * sin(iTime + (dotid * 4.));\n            float influence = 0.8 * pulse / (pow(stDist, 2.) * iResolution.x);\n            sum += influence;\n            \n            if (dotid > (sec * sec)) { break; }\n        }\n    }\n    fragColor = vec4(vec3(sum), 1.);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "wlyGz1",
+       "date": "1578270717",
+       "viewed": 120,
+       "name": "deforming sphere along xyz axis",
+       "description": "Just messing around with atan. Use the mouse to orbit around the shape (x) or change the period of the deformation (y)",
+       "likes": 1,
+       "published": "Public API",
+       "tags": [
+        "simple",
+        "experiment"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "#define MAXD 100.\n\nmat3 roty(float a) {\n    return mat3(\n    \tcos(a), 0., sin(a),\n        0., 1., 0.,\n        -sin(a), 0., cos(a)\n    );\n}\n\nfloat shape(vec3 p) {\n    float sweepX = atan(p.z, p.y);\n    float sweepY = atan(p.x, p.z);\n    float sweepZ = atan(p.y, p.x);\n    float period = floor(iMouse.y / iResolution.y * 10.);\n    float radiusOffset = \n        (sin(sweepY * period))\n        * (sin(sweepX * period))\n        * (sin(sweepZ * period));\n    \n    return length(p) - (1. + radiusOffset*.2);\n}\n\nvec2 map(vec3 p) {\n    // return a distance and a material id\n    return vec2(shape(p), 1.);\n}\n\nvec3 norm(vec3 p) { \n    vec2 ep = vec2(0.001, 0.0);\n    return normalize(map(p).r - vec3(\n        map(p - ep.xyy).r,\n        map(p - ep.yxy).r,\n        map(p - ep.yyx).r\n    ));\n}\n\nvec4 march(vec3 ro, vec3 rd) {\n    float t = 0.;\n    vec4 ret;\n    for (int i = 0; i < 100; i++) {\n        \n        ret.xyz = ro + rd * t;\n        vec2 d = map(ret.xyz);\n        \n        if (d.x < .001) {\n        \tret.w = d.y;\n            break;\n        }\n        \n        t += d.x;\n        \n        if (t > MAXD) {\n            break;\n        }\n    }\n    return ret;\n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    vec2 uv = (fragCoord*2. - iResolution.xy)/iResolution.y;\n\n    vec3 col = vec3(0.5);\n    \n    vec3 ro = vec3(0., 0., 2.);\n    vec3 rd = normalize(vec3(uv.xy, -1.));\n    \n    mat3 rot = roty((iMouse.x / iResolution.x - .5)*10.);\n    ro *= rot;\n    rd *= rot;\n    \n    vec4 p = march(ro, rd);\n    \n    if (p.w > 0.) {\n        col = norm(p.xyz);\n    }\n\n    fragColor = vec4(col,1.0);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "ttd3R7",
+       "date": "0",
+       "viewed": 0,
+       "name": "hairball",
+       "description": "Fork of https://www.shadertoy.com/view/XsfGWN (furball, simesgreen in 2013-05-28). Trying to figure out how it works.",
+       "likes": 0,
+       "published": "Private",
+       "tags": [
+        "hair",
+        "fur",
+        "kajiya",
+        "kay"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [
+         {
+          "id": "XdXGzr",
+          "filepath": "/media/a/8979352a182bde7c3c651ba2b2f4e0615de819585cc37b7175bcefbca15a6683.jpg",
+          "type": "texture",
+          "channel": 0,
+          "sampler": {
+           "filter": "mipmap",
+           "wrap": "repeat",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         }
+        ],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "// fur ball\n// (c) simon green 2013\n// @simesgreen\n// v1.1\n\nconst float uvScale = .4;\nconst float colorUvScale = 0.1;\nconst float furDepth = .6;\nconst int furLayers = 256;\nconst float rayStep = (furDepth * 2.0) / float(furLayers);\n//const float furThreshold = 0.4;\nconst float shininess = 90.0;\n\nbool intersectSphere(vec3 ro, vec3 rd, float r, out float t)\n{\n    // https://gamedev.stackexchange.com/questions/96459/fast-ray-sphere-collision-code\n\tfloat b = dot(-ro, rd);\n\tfloat det = b*b - dot(ro, ro) + r*r;\n\tif (det < 0.0) return false;\n\tdet = sqrt(det);\n\tt = b - det;\n\treturn t > 0.0;\n}\n\nvec3 rotateX(vec3 p, float a)\n{\n    float sa = sin(a);\n    float ca = cos(a);\n    return vec3(p.x, ca*p.y - sa*p.z, sa*p.y + ca*p.z);\n}\n\nvec3 rotateY(vec3 p, float a)\n{\n    float sa = sin(a);\n    float ca = cos(a);\n    return vec3(ca*p.x + sa*p.z, p.y, -sa*p.x + ca*p.z);\n}\n\nvec2 cartesianToSpherical(vec3 p)\n{\t\t\n\tfloat r = length(p);\n\n\tfloat t = (r - (1.0 - furDepth)) / furDepth;\t// why do we divide by furdepth?\n\tp = rotateX(p.zyx, -cos(iTime*1.5)*t*t*0.4).zyx;\t// curl\n\n\tp /= r;\t\n    // these aren't actually spherical coordinates, they're\n    // some distorted polar coords\n\t//vec2 uv = vec2(atan(p.y, p.x), acos(p.z)); \n    vec2 uv = vec2(atan(p.y, p.x), length(p));\n\n\t//uv.x += cos(iTime*1.5)*t*t*0.4;\t// curl\n\t//uv.y += sin(iTime*1.7)*t*t*0.2;\n\tuv.y -= t*t*0.5;\t// curl down\n\treturn uv;\n}\n\n// returns fur density at given position\nfloat furDensity(vec3 pos, out vec2 uv)\n{\n\t//uv = cartesianToSpherical(pos.xzy / length(pos.xzy));\t\n    uv = cartesianToSpherical(pos.xzy);\n\tvec4 tex = textureLod(iChannel0, uv*uvScale, 0.);\n\n\t// thin out hair\n    // former furthreshold\n\tfloat density = smoothstep(.3, 1.0, tex.x);\n\t\n    // radius here is easy because the sphere is at 0\n\tfloat r = length(pos);\n\tfloat t = (r - (1.0 - furDepth)) / furDepth;\n\t\n\t// fade out along length\n\tfloat len = tex.z;\n\tdensity *= smoothstep(len, len-0.2, t);\n\n\treturn density;\t\n}\n\n// calculate normal from density\nvec3 furNormal(vec3 pos, float density)\n{\n    float eps = 0.01;\n    vec3 n;\n\tvec2 uv;\n    n.x = furDensity( vec3(pos.x+eps, pos.y, pos.z), uv ) - density;\n    n.y = furDensity( vec3(pos.x, pos.y+eps, pos.z), uv ) - density;\n    n.z = furDensity( vec3(pos.x, pos.y, pos.z+eps), uv ) - density;\n    return normalize(n);\n}\n\nvec3 furShade(vec3 pos, vec2 uv, vec3 ro, float density)\n{\n\t// lighting\n\tconst vec3 L = vec3(0, 1, 0);\n\tvec3 V = normalize(ro - pos);\n\tvec3 H = normalize(V + L);\n\n\tvec3 N = -furNormal(pos, density);\n\t//float diff = max(0.0, dot(N, L));\n\tfloat diff = max(0.0, dot(N, L)*0.5+0.5);\n\tfloat spec = pow(max(0.0, dot(N, H)), shininess);\n\t\n\t// base color\n\tvec3 color = textureLod(iChannel0, uv*colorUvScale, 0.0).xyz;\n\n\t// darken with depth\n\tfloat r = length(pos);\n\tfloat t = (r - (1.0 - furDepth)) / furDepth;\n\tt = clamp(t, 0.0, 1.0);\n\tfloat i = t*0.5+0.5;\n\t\t\n\treturn color*diff*i + vec3(spec*i);\n}\t\t\n\nvec4 scene(vec3 ro,vec3 rd)\n{\n\tvec3 p = vec3(0.0);\n\tconst float r = 1.0;\n\tfloat t;\t\t\t\t  \n\tbool hit = intersectSphere(ro - p, rd, r, t);\n\t\n\tvec4 c = vec4(0.);\n\tif (hit) {\n\t\tvec3 pos = ro + rd*t;\n\n\t\t// ray-march into volume\n\t\tfor(int i=0; i<furLayers; i++) {            \n\t\t\tvec4 sampleCol;\n\t\t\tvec2 uv;\n\t\t\tsampleCol.a = furDensity(pos, uv);\n\t\t\tif (sampleCol.a > 0.0) {\n\t\t\t\tsampleCol.rgb = furShade(pos, uv, ro, sampleCol.a);\n\n\t\t\t\t// pre-multiply alpha\n\t\t\t\tsampleCol.rgb *= sampleCol.a;\n                c += sampleCol * (1.0 - c.a);\n\t\t\t\tif (c.a > 0.9) break;\n\t\t\t}\n\t\t\t\n\t\t\tpos += rd*rayStep;\n\t\t}\n\t}\n\t\n\treturn c;\n}\n\n// standard stuff with some mouse controls, all the logic is in scene^\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // standard aspect ratio scaling\n\tvec2 uv = fragCoord.xy / iResolution.xy;\n\tuv = uv*2.0-1.0;\n\tuv.x *= iResolution.x / iResolution.y;\n\t\n    // also standard\n\tvec3 ro = vec3(0.0, 0.0, 2.5);\n\tvec3 rd = normalize(vec3(uv, -2.0));\n\t\n    \n\tvec2 mouse = iMouse.xy / iResolution.xy;\n\tfloat roty = 0.0;\n\tfloat rotx = 0.0;\n\tif (iMouse.z > 0.0) {\n\t\trotx = (mouse.y-0.5)*3.0;\n\t\troty = -(mouse.x-0.5)*6.0;\n\t} else {\n\t\troty = sin(iTime*1.5);\n\t}\n\t\n    ro = rotateX(ro, rotx);\t\n    ro = rotateY(ro, roty);\t\n    rd = rotateX(rd, rotx);\n    rd = rotateY(rd, roty);\n\t\n\tfragColor = scene(ro, rd);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "WdtXRl",
+       "date": "0",
+       "viewed": 0,
+       "name": "improving tread",
+       "description": "yo yo yo we fast",
+       "likes": 0,
+       "published": "Private",
+       "tags": [
+        "speedingthisbabyup"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "float sdRhombus( in vec2 p, in vec2 b ) \n{\n    vec2 q = abs(p);\n    float h = clamp((-2.0*dot(q,b)+dot(b,b))/dot(b,b),-1.0,1.0);\n    float d = length( q - 0.5*b*vec2(1.0-h,1.0+h) );\n    return d * sign( q.x*b.y + q.y*b.x - b.x*b.y );\n}\n\nfloat expImpulse( float k, float x )\n{\n    float h = k*x;\n    return h*exp(1.0-h);\n}\n\nfloat treadpattern(in vec2 p) {\n    const float spacer = .1;\n    const vec2 rhwid = vec2(.5, .5);\n    const vec2 xoffs = vec2(rhwid.x + spacer, 0.);\n    \n    float dist = 10.;\n    dist = min(dist, sdRhombus(p + vec2(0., rhwid.y + spacer), rhwid));\n    dist = min(dist, sdRhombus(p + vec2(0., -(rhwid.y + spacer)), rhwid));\n    dist = min(dist, sdRhombus(p + vec2(rhwid.x + spacer, 0.), rhwid));\n    dist = min(dist, sdRhombus(p + vec2(-(rhwid.x + spacer), 0.), rhwid));\n    return dist;\n}\n    \n\nmat2 rot(float a) {\n    return mat2(\n        cos(a), sin(a),\n        -sin(a), cos(a)\n        );\n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from 0 to 1)\n    vec2 uv = fragCoord / iResolution.xy;\n    uv -= vec2(.5);\n    uv *= 10.;\n    uv = fract(uv);\n    uv -= vec2(.5);\n\n    // Time varying pixel color\n    vec3 col = vec3(1.,.8,0.);\n    const vec3 GRAY = vec3(.1);\n        \n        vec2 uv_r = uv; //rot(.1) * uv;\n        if (treadpattern(uv_r) < .0) {\n            float pulse = expImpulse(1., fract(iTime - uv_r.y * .1));\n            col = mix(col, GRAY, 1.-pulse);\n            col = GRAY;\n        }\n\n    // Output to screen\n    fragColor = vec4(col,1.0);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "tsyGDz",
+       "date": "1569999341",
+       "viewed": 191,
+       "name": "shadetober #01 (ring)",
+       "description": "Inktober, but with shaders",
+       "likes": 2,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "float ring(vec2 uv, vec2 pos, float outer, float inner) {\n    pos *= vec2(sin(iTime * 3.), cos(iTime));\n    pos.x += 0.5;\n    outer *= cos(iTime);\n    inner *= sin(iTime);\n    \n    // calculate distance from ring\n    float d = distance(uv, pos);\n    float imul = step(inner, d);\n    float omul = 1.0 - step(outer, d);\n    \n    return imul * omul;\n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from 0 to 1)\n    vec2 uv = fragCoord/iResolution.y;\n\n    // Time varying pixel color\n    vec3 col = 0.5 + 0.5*cos(iTime+uv.xyx+vec3(0,2,4));\n\n    // is it inside a ring\n    float draw = ring(uv, vec2(0.5, 0.5), 0.5, 0.4);\n    draw += ring(uv, vec2(1.5, 0.5), 0.5, 0.4);\n    draw += ring(uv, vec2(1.5, 1.5), 0.5, 0.2);\n    draw += ring(uv, vec2(2.0, 0.2), 0.5, 0.4);\n    \n    // Output to screen\n    fragColor = draw * vec4(col,1.0);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "wsGGW1",
+       "date": "1570085487",
+       "viewed": 180,
+       "name": "shadetober #02 (mindless)",
+       "description": "Inktober, but with shaders",
+       "likes": 3,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [
+         {
+          "id": "4sf3Rr",
+          "filepath": "/media/a/ad56fba948dfba9ae698198c109e71f118a54d209c0ea50d77ea546abad89c57.png",
+          "type": "texture",
+          "channel": 0,
+          "sampler": {
+           "filter": "mipmap",
+           "wrap": "repeat",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         }
+        ],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "void mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from 0 to 1)\n    vec2 uv = fragCoord/iResolution.xy;\n\n    float centerdist = distance(uv, vec2(.5, .5));\n    vec3 col = vec3(0.0, 0.0, 1.0/centerdist);\n    \n    vec2 erratic = vec2(1.+sin(iTime * 3.), 1.+cos(iTime * 137.)/4.);\n    vec2 erraticuv = (uv)*(erratic);\n\n    vec4 s1 = texture(iChannel0, erraticuv+vec2(0, sin(iTime)));\n    vec4 s2 = texture(iChannel0, erraticuv+vec2(cos(iTime), 0));\n    \n    // Output to screen\n    fragColor = s1.r * s2.r * vec4(col,1.0) * texture(iChannel0, erraticuv+sin(iTime)).r ;\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "tsy3WD",
+       "date": "1570172502",
+       "viewed": 193,
+       "name": "shadetober #02 (mindless.b)",
+       "description": "Inktober, but with shaders",
+       "likes": 2,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [
+         {
+          "id": "4sf3Rr",
+          "filepath": "/media/a/ad56fba948dfba9ae698198c109e71f118a54d209c0ea50d77ea546abad89c57.png",
+          "type": "texture",
+          "channel": 0,
+          "sampler": {
+           "filter": "mipmap",
+           "wrap": "repeat",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         }
+        ],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "void mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from 0 to 1)\n    vec2 uv = fragCoord/iResolution.xy;\n    \n    float dist = distance(uv, vec2(0.5, 0.5));\n    float brightness = 1. / (dist);\n    \n\n    // Time varying pixel color\n    vec3 col = vec3(sin(iTime) * 3., 0., brightness);\n    \n    uv *= vec2(sin(iTime * 34.) * .3, cos(iTime * 199.) * .4);\n    \n\tvec4 texcol = texture(iChannel0, uv + iTime);\n    vec4 texcol1 = texture(iChannel0, uv + vec2(sin(iTime), 0.));\n    vec4 texcol2 = texture(iChannel0, uv + vec2(0., cos(iTime)));\n    \n    // Output to screen\n    fragColor = (texcol.r * texcol1.r * texcol2.r) * vec4(col,1.0);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "tdG3DW",
+       "date": "1570176613",
+       "viewed": 201,
+       "name": "shadetober #03 (bait)",
+       "description": "Inktober, but with shaders",
+       "likes": 2,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [
+         {
+          "id": "Xdf3zn",
+          "filepath": "/media/a/85a6d68622b36995ccb98a89bbb119edf167c914660e4450d313de049320005c.png",
+          "type": "texture",
+          "channel": 0,
+          "sampler": {
+           "filter": "mipmap",
+           "wrap": "repeat",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         }
+        ],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "float expStep( float x, float k, float n )\n{\n    return exp( -k*pow(x,n) );\n}\n\nfloat parabola( float x, float k )\n{\n    x = fract(x);\n    return pow( 4.0*x*(1.0-x), k );\n}\n#define PI 3.141\nfloat sinc( float x, float k )\n{\n    float a = PI*(k*x-1.0);\n    return sin(a)/a;\n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from 0 to 1)\n    vec2 uv = fragCoord/iResolution.xy;\n    \n    vec4 distort = texture(iChannel0, uv + iTime * .3) / 32.;\n    uv += distort.xy;\n\n    vec3 col = vec3(1.,.2,.6);\n    col.r = 0.5 + 0.5*cos(uv.x * 197.);\n    col.r *= 1. - parabola(uv.y + (sin(uv.x*32.) + cos(uv.x*10.))*.7 + iTime * .3, 6.);\n    // col.g = 0.5 + 0.5*cos(iTime+uv.y * 12.);\n    \n    //col = vec3(1.,1.,0.);\n    //col *= parabola(uv.y + iTime * .3, 128.);\n    \n    // Output to screen\n    fragColor = vec4(col,1.0);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "3dyGDm",
+       "date": "1570260282",
+       "viewed": 204,
+       "name": "shadetober #04 (freeze)",
+       "description": "Inktober, but with shaders",
+       "likes": 1,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [
+         {
+          "id": "4sXGRn",
+          "filepath": "/media/a/95b90082f799f48677b4f206d856ad572f1d178c676269eac6347631d4447258.jpg",
+          "type": "texture",
+          "channel": 0,
+          "sampler": {
+           "filter": "mipmap",
+           "wrap": "repeat",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         },
+         {
+          "id": "4df3Rr",
+          "filepath": "/media/a/3871e838723dd6b166e490664eead8ec60aedd6b8d95bc8e2fe3f882f0fd90f0.jpg",
+          "type": "texture",
+          "channel": 1,
+          "sampler": {
+           "filter": "mipmap",
+           "wrap": "repeat",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         }
+        ],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "#define OCTAVES 16\nfloat fbm (in vec2 uv) {\n    // Initial values\n    float value = 0.1;\n    float amplitude = sin(iTime)/2. * .1 + .5;\n    float frequency = 10.;\n    //\n    // Loop of octaves\n    for (int i = 0; i < OCTAVES; i++) {\n        value += amplitude * texture(iChannel0, uv).r;\n        uv *= 2.;\n        amplitude *= .5;\n    }\n    return value;\n}\n\n#define PI 3.141\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from 0 to 1)\n    vec2 uv = fragCoord/iResolution.xy;\n    vec4 distortion = texture(iChannel1, uv);\n    uv.x += sin(distortion.r);\n    uv.x *= iResolution.x / iResolution.y;\n    float fractime = fract(iTime / 10.);\n    vec2 pos = uv - vec2(0.5);\n    pos.y -= 1.;\n    pos.y += fractime*2.;\n    pos.x += -1.+sin(iTime);\n\n    vec3 col = 1.05 + 0.5*atan(vec3(0.,uv.x,uv.y) * vec3(1., .4, 10.) * PI);\n    col*=fbm(uv);\n    \n    float rad = length(pos) * 2.0;\n    float a = atan(pos.y, pos.x);\n    float f= cos(a * fractime * 10.) * sin(a *  11.);\n    vec3 inside = 1. - vec3(step(f, rad));\n    \n    // Output to screen\n    fragColor = vec4(col, 1.) + vec4(inside, 1.);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "WsVGDm",
+       "date": "1570342335",
+       "viewed": 180,
+       "name": "shadetober #05 (build)",
+       "description": "Inktober, but with shaders",
+       "likes": 2,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [
+         {
+          "id": "4sf3Rr",
+          "filepath": "/media/a/ad56fba948dfba9ae698198c109e71f118a54d209c0ea50d77ea546abad89c57.png",
+          "type": "texture",
+          "channel": 0,
+          "sampler": {
+           "filter": "mipmap",
+           "wrap": "repeat",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         }
+        ],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "void mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    vec2 uv = fragCoord / iResolution.xy;\n    \n    // define a \"target\" height, the arbitrary point between earth and sky\n    // this will be the value of the red channel at a single row of our input texture\n    // for dynamism, change which row it is as time passes\n    // (we also offset and scale the result slightly to appease the aesthetic \"rule of thirds\")\n    vec2 sampledrow = vec2(uv.x, iTime * .005);\n    float redvalue = texture(iChannel0, sampledrow).r;\n    float filltarget = .1 + (redvalue) * .7;\n    \n    vec3 earthcolor = vec3(uv.y * 2., 0., 0.);\n    vec3 skycolor = vec3(1.-(uv.y * uv.y), (1.-(uv.y * uv.y))/2., .2);\n    vec3 col = mix( skycolor, earthcolor, 1. - step(filltarget, uv.y) );\n    \n    // Output to screen\n    fragColor = vec4(col, 1.);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "wsyGRG",
+       "date": "1570465191",
+       "viewed": 200,
+       "name": "shadetober #06 (husky)",
+       "description": "Inktober, but with shaders",
+       "likes": 2,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "// shapes from https://www.iquilezles.org/www/articles/distfunctions2d/distfunctions2d.htm\n// Inktober struggles. I hate this one. -%\n\nfloat cro(in vec2 a, in vec2 b ) { return a.x*b.y - a.y*b.x; }\nmat2 rot(float a) { return mat2(cos(a), -sin(a), sin(a), cos(a)); }\nfloat sdCircle( vec2 p, float r )\n{\n  return length(p) - r;\n}\n\n//----------------------------------------------------------------------\n// Distance to y(x) = a + b*cos(cx+d)\n//----------------------------------------------------------------------\nfloat udCos( in vec2 p, in float a, in float b, in float c, in float d )\n{\n    // convert all data to a primitive cosine wave\n    p = c*(p-vec2(d,a));\n\n    // reduce to principal half cycle\n    const float TPI = 6.28318530718;\n    p.x = mod( p.x, TPI); if( p.x>(0.5*TPI) ) p.x = TPI - p.x;\n\n    // find zero of derivative (minimize distance)\n    float xa = 0.0, xb = TPI;\n    for( int i=0; i<24; i++ ) // 24 bit precision\n    {\n        float x = 0.5*(xa+xb);\n        float y = x-p.x+b*c*sin(x)*(p.y-b*c*cos(x));\n        if( y<0.0 ) xa = x; else xb = x;\n    }\n    float x = 0.5*(xa+xb);\n    \n    // compute distance    \n    vec2 q = vec2(x,b*c*cos(x));\n    return length(p-q)/c;\n}\n\nfloat sdUnevenCapsule( in vec2 p, in vec2 pa, in vec2 pb, in float ra, in float rb )\n{\n    p  -= pa;\n    pb -= pa;\n    float h = dot(pb,pb);\n    vec2  q = vec2( dot(p,vec2(pb.y,-pb.x)), dot(p,pb) )/h;\n    \n    //-----------\n    \n    q.x = abs(q.x);\n    \n    float b = ra-rb;\n    vec2  c = vec2(sqrt(h-b*b),b);\n    \n    float k = cro(c,q);\n    float m = dot(c,q);\n    float n = dot(q,q);\n    \n         if( k < 0.0 ) return sqrt(h*(n            )) - ra;\n    else if( k > c.x ) return sqrt(h*(n+1.0-2.0*q.y)) - rb;\n                       return m                       - ra;\n}\n\nfloat sdVesica(vec2 p, float r, float d)\n{\n    p = abs(p);\n    float b = sqrt(r*r-d*d);\n    return ((p.y-b)*d>p.x*b) ? length(p-vec2(0.0,b))\n                             : length(p-vec2(-d,0.0))-r;\n}\n\n// sca is the sin/cos of the orientation\n// scb is the sin/cos of the aperture\nfloat sdArc( in vec2 p, in vec2 sca, in vec2 scb, in float ra, float rb )\n{\n    p *= mat2(sca.x,sca.y,-sca.y,sca.x);\n    p.x = abs(p.x);\n    float k = (scb.y*p.x>scb.x*p.y) ? dot(p.xy,scb) : length(p.xy);\n    return sqrt( dot(p,p) + ra*ra - 2.0*ra*k ) - rb;\n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    float tval = fract(iTime);\n    // Normalized pixel coordinates (from 0 to 1)\n    vec2 uv = fragCoord/iResolution.xy;\n\tvec2 p = (2.0*fragCoord.xy-iResolution.xy)/iResolution.y;\n    p *= 2.;\n    \n    p += vec2(1.6, .5);\n    \n    // draw dog head\n    float dHead = sdUnevenCapsule(p, vec2(.2, .8), vec2(2.5, .3), .3, .9);\n    // draw dog jaw\n    float dJaw = sdUnevenCapsule(p, vec2(.4, -.1), vec2(2.5, -.1), .1, .5);\n    // draw dog tongue\n    float dTongue = 0.;\n    // draw dog ears\n    mat2 earrot = rot(-.3);\n    vec2 eartrans = vec2(-2.9, -1.2);\n    float dEar = sdVesica(earrot * (p + eartrans), 1., .7);\n    // draw dog teeth\n    \n    // draw dog eye\n    \n    // draw dog nose\n    \n    // draw dog body\n    \n       \n    float final = \n        sign(dEar)\n        + sign(dHead)\n        + sign(dJaw);\n    final /= 3.;\n\n    // Time varying pixel color\n    vec3 col = vec3(1., .3, .5);\n\n    float wavy = pow(dHead, 2.) * sin(dHead * 100. - iTime * 4.);\n    \n    // Output to screen\n    fragColor = vec4(vec3(final) * col + wavy,1.0);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "wsKGzy",
+       "date": "1570515716",
+       "viewed": 187,
+       "name": "shadetober #07 (enchanted)",
+       "description": "Inktober, but with shaders",
+       "likes": 4,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "// noise functions from https://gist.github.com/patriciogonzalezvivo/670c22f3966e662d2f83\n#define PI 3.14159\n\nvec3 permute(vec3 x) { return mod(((x*34.0)+1.0)*x, 289.0); }\n\nfloat snoise(vec2 v){\n  const vec4 C = vec4(0.211324865405187, 0.366025403784439,\n           -0.577350269189626, 0.024390243902439);\n  vec2 i  = floor(v + dot(v, C.yy) );\n  vec2 x0 = v -   i + dot(i, C.xx);\n  vec2 i1;\n  i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);\n  vec4 x12 = x0.xyxy + C.xxzz;\n  x12.xy -= i1;\n  i = mod(i, 289.0);\n  vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))\n  + i.x + vec3(0.0, i1.x, 1.0 ));\n  vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy),\n    dot(x12.zw,x12.zw)), 0.0);\n  m = m*m ;\n  m = m*m ;\n  vec3 x = 2.0 * fract(p * C.www) - 1.0;\n  vec3 h = abs(x) - 0.5;\n  vec3 ox = floor(x + 0.5);\n  vec3 a0 = x - ox;\n  m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );\n  vec3 g;\n  g.x  = a0.x  * x0.x  + h.x  * x0.y;\n  g.yz = a0.yz * x12.xz + h.yz * x12.yw;\n  return 130.0 * dot(m, g);\n}\n\n\nfloat sdCircle( vec2 p, float r )\n{\n  return length(p) + .5 - r;\n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from 0 to 1)\n    vec2 uv = fragCoord/iResolution.xy;\n    float aspect = iResolution.x / iResolution.y;\n    // this is sloppy and weird what's the real math here\n    uv.x *= aspect;\n    uv.x -= aspect * .5;\n    uv.y -= .5;\n    \n    vec3 final = vec3(.2,.3,.7);\n    float dt = 500.+iTime * .05;\n    for (int i = 1; i < 15; i++) {\n        // the \"pn\" vectors represent points in the snoise space\n        vec2 noiseSamplePoint = vec2(dt*.1, dt*.2) * float(i);\n        \n        // radius\n        float radius = clamp(.15 + .1 * snoise(noiseSamplePoint), 0., 1.); // not sure why this can go negative\n        \n        // pos.x [-.5, .5]\n        float posx = snoise(noiseSamplePoint + .3);\n        \n        // pos.y [-.5, .5]\n        float posy = snoise(noiseSamplePoint + .7);\n        \n        // \"blur\"\n        float blur = clamp(.4 + snoise(noiseSamplePoint + .11) * .1, 0., 1.);  // this one too\n        \n        // randomize some color channels too\n        float red = clamp(.2 + snoise(noiseSamplePoint + .13), 0., 1.);\n        float green = clamp(.3 + snoise(noiseSamplePoint + .17), 0., 1.);\n        float blue = clamp(.8 + snoise(noiseSamplePoint + .19), 0., 1.);\n        \n        vec2 offset = vec2(posx, posy) * .5;\n        float cDist = sdCircle(uv - offset, radius);\n        cDist = 1.-smoothstep(blur, .5, cDist);\n        \n        final += vec3(red,green,blue) * vec3(cDist) * .14;\n    }\n    \n    // add a little vignette/hotspot\n    final *= 1.1 - length(uv);\n    \n    // Output to screen\n    // vec3 col = texture(iChannel0, uv).xxx;\n    fragColor = vec4(final, 1.0);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "WdKGRK",
+       "date": "1570599464",
+       "viewed": 121,
+       "name": "shadetober #08 (frail)",
+       "description": "Inktober, but with shaders",
+       "likes": 1,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "mat2 rot(float a) {\n    return mat2(cos(a), -sin(a),\n                sin(a), cos(a)\n               );\n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from 0 to 1)\n    vec2 uv = fragCoord/iResolution.xy;\n    float aspect = iResolution.x/iResolution.y;\n    uv.x *= aspect;\n    uv -= vec2(aspect * .5, 0.5);\n\n    // Time varying pixel color\n    vec3 col = vec3(.8,0.,.1);\n    \n    float wiggliness = 10.;\n    uv.x += sin((uv.y + iTime) * wiggliness) * .2;\n    \n    uv = rot(iTime) * uv;\n    \n    float p = length(uv);\n    p = smoothstep(.2, .22, p);\n    \n    col *= fract(uv * 2.).xyx;\n\n    // Output to screen\n    fragColor = vec4(col,1.0) + p * .5;\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "WdV3zc",
+       "date": "1570667126",
+       "viewed": 212,
+       "name": "shadetober #09 (swing)",
+       "description": "Inktober, but with shaders",
+       "likes": 5,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [
+         {
+          "id": "4dX3Rn",
+          "filepath": "/media/a/bd6464771e47eed832c5eb2cd85cdc0bfc697786b903bfd30f890f9d4fc36657.jpg",
+          "type": "texture",
+          "channel": 0,
+          "sampler": {
+           "filter": "mipmap",
+           "wrap": "repeat",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         }
+        ],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "// trying to recreate the plane deformation effect before reading the article\n// https://www.iquilezles.org/www/articles/deform/deform.htm\n#define PI 3.14159\n#define PI2 6.284\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from 0 to 1)\n    vec2 uv = fragCoord/iResolution.xy;    \n    uv -= vec2(.5, .5);\n    uv.x *= iResolution.x/iResolution.y;\n    \n    // create polar uvs to sample texture\n    float rad = length(uv);\n    float phi = atan(uv.y, uv.x) / PI2;\n    // you can scale the angle by radius! neat trick.\n    phi += sin(rad * .2 * sin(iTime*2.5));    \n    vec2 polUV = vec2(phi, rad + sin(iTime * .5) );\n    \n    // failed experiments...\n    // polUV = vec2( phi, sin((7. + sin(iTime))*rad));\n    // polUV = vec2( 0.1*uv.x/(0.11+rad*(2. + sin(iTime))), 0.1*uv.y/(0.11+rad*(2. + sin(iTime))));\n    // polUV = vec2(uv.y + iTime * phi/rad, uv.x + iTime * phi/rad);\n\n    // zoom in on part of the texture so it isn't quite so noisy\n    polUV.y *= .15;\n    \n    // color shifted vignette\n    float vign = (.5-rad);\n    vec3 modColors = vec3(vign*2., vign*1.4, vign * 1.);\n        \n    // sample, add vignette, send to screen\n    fragColor = texture(iChannel0, polUV) + vec4(modColors, 1.);\n    \n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       },
+       {
+        "inputs": [
+         {
+          "id": "4sf3Rr",
+          "filepath": "/media/a/ad56fba948dfba9ae698198c109e71f118a54d209c0ea50d77ea546abad89c57.png",
+          "type": "texture",
+          "channel": 0,
+          "sampler": {
+           "filter": "mipmap",
+           "wrap": "repeat",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         }
+        ],
+        "outputs": [
+         {
+          "id": "4dXGR8",
+          "channel": 0
+         }
+        ],
+        "code": "void mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from 0 to 1)\n    vec2 uv = fragCoord/iResolution.xy;\n    uv -= vec2(.5, .5);\n    \n    uv.x *= iResolution.x/iResolution.y;\n    vec3 col = vec3(length(uv));\n    \n    fragColor = vec4(col, 1.);\n}",
+        "name": "Buffer A",
+        "description": "",
+        "type": "buffer"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "WsKGRt",
+       "date": "1570782177",
+       "viewed": 169,
+       "name": "shadetober #10 (pattern)",
+       "description": "Inktober, but with shaders",
+       "likes": 2,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "#define MAX_MARCHING_STEPS 256\n#define PI 3.14159\n#define MAX_DEPTH 40.0\n\nconst float EPSILON = .001;\n\n// copied from iq's page on shapes\nfloat sdOctahedron( in vec3 p, in float s)\n{\n    p = abs(p);\n    return (p.x+p.y+p.z-s)*0.57735027;\n}\n\n// copied from iq's page on shapes\nvec3 opRep( in vec3 p, in vec3 c)\n{\n    return mod(p+0.5*c,c)-0.5*c;\n}\n\n// this could be cleaned up. can we use functors?\nvec3 gradient(vec3 p) {\n    return normalize(vec3(\n    \tsdOctahedron(vec3(p.x + EPSILON, p.yz), 1.) - sdOctahedron(vec3(p.x - EPSILON, p.yz), 1.),\n    \tsdOctahedron(vec3(p.x, p.y + EPSILON, p.z), 1.) - sdOctahedron(vec3(p.x, p.y - EPSILON, p.z), 1.),\n    \tsdOctahedron(vec3(p.xy, p.z + EPSILON), 1.) - sdOctahedron(vec3(p.xy, p.z - EPSILON), 1.)\n    ));\n}\n\n// copied from the internet\nmat4 rotation3d(vec3 axis, float angle) {\n  axis = normalize(axis);\n  float s = sin(angle);\n  float c = cos(angle);\n  float oc = 1.0 - c;\n\n  return mat4(\n\t\toc * axis.x * axis.x + c,           oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s,  0.0,\n    oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c,           oc * axis.y * axis.z - axis.x * s,  0.0,\n    oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c,           0.0,\n\t\t0.0,                                0.0,                                0.0,                                1.0\n\t);\n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from 0 to 1)\n    vec2 uv = fragCoord/iResolution.xy;\n    uv -= vec2(.5, .5);\n    uv.x *= iResolution.x / iResolution.y;\n    float cdist = 1. - length(uv);\n\n    // background light\n    vec3 col = vec3(cdist * .3, cdist * .4, cdist * .5) * 3.;\n    \n    // pos out of screen neg into screen\n    vec4 eye4 = rotation3d(vec3(0.,.2,.4), iTime) * vec4(vec3(0., 0., 5.), 1.);\n    vec3 eye = eye4.xyz;\n    vec2 pix = fragCoord - iResolution.xy * .5;\n    // not sure what this is doing. divide the height by the tan of half of the FOV. confusing.\n    float unsure_z = iResolution.y / tan((PI * .5) * .5);\n    vec3 ray = normalize(vec3(pix, -unsure_z));\n    \n    float depth = 0.0f;\n    for (int i = 0; i < MAX_MARCHING_STEPS; ++i) {\n        vec3 hPoint = eye + depth * ray;\n        vec3 point = opRep(hPoint, vec3(3., 3., 3.));\n        float dist = sdOctahedron(point, 1.);\n        if (dist < EPSILON && depth > 1.) {\n            col = mix(gradient(point) * 1.25 * (20. / float(i)),\n                      col,\n                      depth / MAX_DEPTH);\n            break;\n        }\n        depth += dist;\n        if (depth > MAX_DEPTH) {\n            break;\n        }\n    }\n\n    // Output to screen\n    fragColor = vec4(col,1.0);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "wdGGDy",
+       "date": "1570845340",
+       "viewed": 179,
+       "name": "shadetober #11 (snow)",
+       "description": "Inktober, but with shaders",
+       "likes": 3,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "#define PI 3.14159\n#define MAX_MARCHING_STEPS 256\n#define EPSILON .0001\n#define MAX_DEPTH 40.\n\nconst float rad = 2.;\n\nfloat sdWibblySphere( vec3 p, float s )\n{\n    float timeShift = mod(iTime, PI * 2.);\n\tp.y += sin(p.y * 4. + timeShift) * 1.;\n    return length(p)-(s);\n}\n\n// \"snow\" heh geddit\nfloat rand(float n){return fract(sin(n) * 43758.5453123);}\n\nfloat noise(float p){\n\tfloat fl = floor(p);\n  float fc = fract(p);\n\treturn mix(rand(fl), rand(fl + 1.0), fc);\n}\n\nvec3 gradient(vec3 p) {\n    return normalize(vec3(\n        sdWibblySphere(vec3(p.x + EPSILON, p.yz), rad) - sdWibblySphere(vec3(p.x - EPSILON, p.yz), rad),\n        sdWibblySphere(vec3(p.x, p.y + EPSILON, p.z), rad) - sdWibblySphere(vec3(p.x, p.y - EPSILON, p.z), rad),\n        sdWibblySphere(vec3(p.xy, p.z + EPSILON), rad) - sdWibblySphere(vec3(p.xy, p.z - EPSILON), rad)\n        ));\n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from 0 to 1)\n    vec2 uv = fragCoord/iResolution.xy;\n    uv -= vec2(.5,.5);\n    uv.x *= iResolution.x / iResolution.y;\n\n    // Time varying pixel color\n    vec3 col = vec3(.2) * (1.4 - length(uv));\n    uv += vec2(.5,.5);\n    \n    // pos out of screen neg into screen\n    vec3 eye = vec3(0., 0., 5.);\n    vec2 pix = fragCoord - iResolution.xy * .5;\n    float z = iResolution.y / tan((PI * .5) * .5);\n    vec3 ray = normalize(vec3(pix, -z));\n    \n    float depth = 0.0;\n    for (int i = 0; i < MAX_MARCHING_STEPS; ++i) {\n        vec3 hPoint = eye + depth * ray;\n        float dist = sdWibblySphere(hPoint, rad);\n        if (dist < EPSILON) {\n            vec3 norm = gradient(hPoint);\n            col = vec3(norm.z) * rand((20. + iTime) * uv.x * uv.y);\n            break;\n        }\n        depth += dist;\n        if (depth > MAX_DEPTH) {\n            break;\n        }\n    }\n    \n    // Output to screen\n    fragColor = vec4(col,1.0);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "3dG3WV",
+       "date": "1570952709",
+       "viewed": 199,
+       "name": "shadetober #12 (dragon)",
+       "description": "Inktober, but with shaders",
+       "likes": 3,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [
+         {
+          "id": "XdX3zn",
+          "filepath": "/media/a/488bd40303a2e2b9a71987e48c66ef41f5e937174bf316d3ed0e86410784b919.jpg",
+          "type": "cubemap",
+          "channel": 0,
+          "sampler": {
+           "filter": "mipmap",
+           "wrap": "clamp",
+           "vflip": "false",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         }
+        ],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "float map(in vec3 p, in float rad) {\n    p.y += sin(p.x * p.z * .2);\n    vec2 t = vec2(10.,1.);\n    vec2 q = vec2(length(p.xz)-t.x,p.y);\n    return length(q)-t.y;\n}\n\nvec3 grad(in vec3 p, in float rad) {\n    vec2 ep = vec2(0.00001, 0.);\n    return normalize(vec3(map(p + ep.xyy, rad) - map(p - ep.xyy, rad),\n                map(p + ep.yxy, rad) - map(p - ep.yxy, rad),\n                map(p + ep.yyx, rad) - map(p - ep.yyx, rad)));\n}\n\nmat3 roty(in float rad) {\n    return mat3(\n    cos(rad), 0., sin(rad),\n        0., 1., 0.,\n        -sin(rad), 0., cos(rad)\n    );\n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from 0 to 1)\n    vec2 uv = fragCoord/iResolution.xy;\n    uv -= vec2(.5);\n    uv.x *= iResolution.x / iResolution.y;\n    \n    vec3 eye = vec3(0., 0., 0.);\n    vec3 ray = normalize(vec3(uv, -1.0));\n    \n    // is this math right? seems right.\n    mat3 wibble = roty(iTime * .2);\n    ray = wibble * ray;\n    eye = wibble * eye;\n\n    vec3 col = texture(iChannel0, ray).rgb;\n    col *= .5 - abs(uv.y);\n    col *= pow(1.5 + length(uv * 2.), 2.);\n    \n    float t = 0.;\n    for (int i = 0; i < 100; i++){\n        vec3 point = eye + ray * (t);\n        float depth = map(point, .5);\n        if (depth < .0001) {\n            vec3 norm = grad(point, .5);\n            norm *= wibble; // some shennanigans\n            vec3 dif = texture(iChannel0, norm).rgb;\n            col = dif;\n            break;\n        }\n        t += depth;\n        if (t > 20.) {\n            break;\n        }\n    }\n\n    // Output to screen\n    fragColor = vec4(col,1.0);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "wsKGWV",
+       "date": "1571033113",
+       "viewed": 187,
+       "name": "shadetober #13 (ash)",
+       "description": "Inktober, but with shaders",
+       "likes": 2,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [
+         {
+          "id": "4sf3Rr",
+          "filepath": "/media/a/ad56fba948dfba9ae698198c109e71f118a54d209c0ea50d77ea546abad89c57.png",
+          "type": "texture",
+          "channel": 0,
+          "sampler": {
+           "filter": "mipmap",
+           "wrap": "repeat",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         }
+        ],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "#define PI2 6.282\n\nfloat map(vec3 p) {\n    float angle = atan(p.z, p.x) / PI2;\n    vec2 lookup = vec2(p.x, p.z) + vec2(angle, -iTime);\n    float rad = \n        (1. + p.y) - cos(p.y) * p.y\n        + texture(iChannel0, (lookup * .2)).r\n        * smoothstep(0., 1., p.y * .75);\n    \n    return length(p) - rad * .7;\n}\n\nvec3 grad(vec3 p) { \n    vec2 ep = vec2(.0001, 0.);\n    return normalize(vec3(\n        map(p + ep.xyy) - map(p - ep.xyy),\n        map(p + ep.yxy) - map(p - ep.yxy),\n        map(p + ep.yyx) - map(p - ep.yyx)\n        ));\n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from 0 to 1)\n    vec2 uv = fragCoord/iResolution.xy;\n    uv -= vec2(.5);\n    uv.x *= iResolution.x / iResolution.y;\n    \n    vec3 eye = vec3(0., .4, 9.);\n    vec3 ray = normalize(vec3(uv, -1.5));\n    \n    vec2 spot = uv;\n    spot.y *= 8.;\n    spot.x *= 2.;\n    spot.y += 1.3;\n    float d = length(spot);\n    \n    float rBase = (sin(iTime) + 1.) * .03 + .7;\n    float gBase = (sin(iTime * 1.2) + 1.2) * .06 + .4;\n    vec3 col = vec3(rBase - d, gBase-d, 0.);\n\n    float t = 0.;\n    for (int i = 0; i < 100; i++) {\n        vec3 p = eye + ray * t;\n        float depth = map(p);\n        if (depth < .001) {\n            vec3 lightpos = vec3(0., -1., 0.);\n            vec3 lightcol = vec3(1.);\n            \n            vec3 norm = grad(p);\n            \n            float alignment = dot(lightpos, norm);\n            vec3 addcol = lightcol * alignment;\n            col = clamp(vec3(1. - p.y, .5 - p.y, 0.), 0., 1.) \n                + addcol * .35;\n            col *= col;\n        }\n        t += depth;\n        if (depth > 20.) {\n            break; }\n    }\n\n    // Output to screen\n    fragColor = vec4(col,1.0);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "wdy3D3",
+       "date": "1571156780",
+       "viewed": 178,
+       "name": "shadetober #14 (overgrown)",
+       "description": "Inktober, but with shaders",
+       "likes": 2,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "#define PI 3.14159\n\n// polynomial smooth min (k = 0.1);\n// https://www.iquilezles.org/www/articles/smin/smin.htm\nfloat smin(float a, float b, float k) {\n  float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0);\n  return mix(b, a, h) - k * h * (1.0 - h);\n}\n\nfloat sdCylinder(vec3 p, vec3 c) { return length(p.xz - c.xy) - c.z; }\n\nmat3 rotx(in float rad) {\n  return mat3(1., 0., 0., 0., cos(rad), sin(rad), 0., -sin(rad), cos(rad));\n}\nmat3 roty(in float rad) {\n  return mat3(cos(rad), 0., sin(rad), 0., 1., 0., -sin(rad), 0., cos(rad));\n}\nmat3 rotz(in float rad) {\n  return mat3(cos(rad), sin(rad), 0., -sin(rad), cos(rad), 0., 0., 0., 1.);\n}\n\nfloat map(in vec3 p) {\n  vec3 cyl = vec3(0., 0., .2);\n\n  float displace = \n      cos(p.x * PI + mod(iTime,PI) * 10.)\n      +cos(p.y * PI + iTime * .2)\n      +cos(p.z * PI + iTime * .6)\n      ;\n  displace *= .05;\n\n  float vert = sdCylinder(p, cyl) + displace;\n  p *= rotz(PI * .5);\n  float hori = sdCylinder(p, cyl) + displace;\n  p *= rotx(PI * .5);\n  float dept = sdCylinder(p, cyl) + displace;\n\n  float blending = (sin(iTime * 2.) + 2.) * .2;\n  return smin(dept, smin(hori, vert, blending), blending);\n}\n\nfloat raymod(in vec3 p, in vec3 c) {\n  vec3 q = mod(p + 0.5 * c, c) - 0.5 * c;\n  return map(q);\n}\n\nvec3 grad(vec3 p) {\n  vec2 ep = vec2(0.00001, 0.);\n  return normalize(map(p) -\n                   vec3(map(p - ep.xyy), map(p - ep.yxy), map(p - ep.yyx)));\n}\n\nvoid mainImage(out vec4 fragColor, in vec2 fragCoord) {\n  vec2 uv = (2. * fragCoord - iResolution.xy) / iResolution.y;\n  vec3 color = vec3(0.);\n\n  vec3 eye = vec3(.5, .5, 1.5);\n  vec3 ray = normalize(vec3(uv, -.5));\n\n  // some camera motion\n  mat3 rotx = rotx(iTime * .2);\n  mat3 roty = roty(iTime * .3);\n  mat3 rotz = rotz(iTime * .4);\n  mat3 rot = rotx * roty * rotz;\n  eye *= rot;\n  ray *= rot;\n\n  float t = 0.;\n  for (int i = 0; i < 100; i++) {\n    vec3 p = eye + ray * t;\n    float d = raymod(p, vec3(2.));\n    if (d < .001 && i > 32) {\n        \n      vec3 n = grad(p);\n      \n      vec3 lcol = vec3(0., .6, .2);\n      vec3 ldir = normalize(vec3(1., 1., 1.));\n      \n      vec3 lcol2 = vec3(.0, .8, .5);\n      vec3 ldir2 = normalize(vec3(1., -1., -1.));\n        \n      float atten = pow(1. / (.2 + t), .5);\n      color = (dot(n, ldir) * lcol + pow(.5 + dot(n, ldir2), 2.) * lcol2) * atten;\n        \n      break;\n    }\n    t += d;\n    if (t > 100.) {\n      color = vec3(0.);\n      break;\n    }\n  }\n\n  fragColor = vec4(color, 1.);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "WdKGWt",
+       "date": "1571209397",
+       "viewed": 262,
+       "name": "shadetober #15 (legend)",
+       "description": "Inktober, but with shaders",
+       "likes": 8,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [
+         {
+          "id": "4dXGRn",
+          "filepath": "/media/a/10eb4fe0ac8a7dc348a2cc282ca5df1759ab8bf680117e4047728100969e7b43.jpg",
+          "type": "texture",
+          "channel": 0,
+          "sampler": {
+           "filter": "mipmap",
+           "wrap": "repeat",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         }
+        ],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "// http://roy.red/slitscan-.html\n\n#define PI 3.14159\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from -.5 to .5) w/ aspect ratio adjustment\n    vec2 uv = (2. * fragCoord - iResolution.xy) / iResolution.y;\n    \n    // tar: \"target\", this is really just the origin offset but my variable names are bad\n    // d: distance to origin\n    // ang: angle about the origin normalized to -1.,1.\n    vec2 tar = vec2(sin(iTime * .2) * .2, sin(iTime * .1) * .1);\n    float d = length(uv - tar);\n    float ang = atan(uv.y, uv.x) / PI;\n\n    // fix the atan discontinuity (we normalize ang to -1.,1. in previous step)\n    ang *= 1. - step(1., fwidth(ang));\n    \n    // index into the texture\n    // u: inverse of distance to origin (fake perspective)\n    // v: angle about the origin\n    vec3 col = texture(iChannel0, vec2(1. / d + fract(iTime * .4), ang)).rgr;\n    \n    // light fakery\n    float powscale = (sin(iTime) * .5) + 1.1;\n    col *= 1. / pow(d, powscale);\n    col *= 1. - d * .5;\n    col.r *= col.r;\n\n    // Output to screen\n    fragColor = vec4(col,1.0);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "3scXR8",
+       "date": "1571371841",
+       "viewed": 181,
+       "name": "shadetober #16 (wild)",
+       "description": "Inktober, but with shaders",
+       "likes": 4,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "// should be a square for best results\n#define NUM 25\n\nvoid mainImage(out vec4 fragColor, in vec2 fragCoord) {\n    vec2 uv = (2. * fragCoord - iResolution.xy) / iResolution.y * .25;\n    // warm up the clock a bit\n    float dt = iTime + 10.;\n\n    // init points\n    vec2 points[NUM];\n    int stride = 5;\n    for(int i = 0; i < NUM; i++) {\n        float row = float(i / stride);\n        float col = float(i % stride);\n        points[i] = (-2. + vec2(col, row)) / float(stride);\n\n        // todo this could probably use some more interesting movement\n        points[i] += vec2(\n             sin(dt*.123*float(i)) * .1,\n             sin(19. + dt*.256*float(i)) * .1\n            );\n    }\n    \n    // debug origin draw\n    #if 0\n    if (uv.x > -.01 && uv.x < .01) { fragColor = vec4(1.,0.,0.,1.); return;}\n    if (uv.y > -.01 && uv.y < .01) { fragColor = vec4(1.,0.,0.,1.); return;}\n    #endif\n\n    // this loop calculates the closest and second closest distances\n    // it will be used for the classic f2-f1 voronoi border\n    vec2 dist = vec2(.5);\n    for(int i = 0; i < NUM; i++) {\n        float d = distance(uv, points[i]);\n        if (d < dist.x) {\n            // store the new closest value and record\n            // what the previous one was in dist.y\n            dist.y = dist.x;\n            dist.x = d;\n        } else if (d < dist.y) {\n            // sometimes the closest value doesn't \n            // change but the second closest does\n            dist.y = d;\n        }\n    }\n\n    // colors are based on leopard print patterns\n    vec3 base = vec3(1.,.8,.5);\n    vec3 outerspot = vec3(0.1, .05, .02);\n    vec3 innerspot = vec3(.81, .37, .01);\n\n    // easy f2-f1 voronoi. consider incorporating iq's perfect border\n    // if you want something more predictable\n    vec3 voro = vec3(dist.y - dist.x);\n    vec3 col = mix(base, outerspot, step(.02, voro));\n    col = mix(col, innerspot, step(.06, voro));\n\n    fragColor = vec4(col, 1);\n}\n",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "3dcXz8",
+       "date": "1571730663",
+       "viewed": 113,
+       "name": "shadetober #17 (ornament)",
+       "description": "Inktober, but with shaders.\n\nThis one feels unsuccessful to me (theme wise) but I kinda like where it ended up.",
+       "likes": 0,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "#define NUMBEADS 10\n#define PI2 6.283\nvec3 path(float t) {\n    // I wanted a spiral of beads that would chase each other around\n    // (i.e. by doing something like opTwist) but I couldn't get it\n    // looking right, settled for this spiral-y effect where the beads\n    // end up intersecting, so I just used soft min to have them glob\n    // together without discontinuities which ended up looking interesting\n    float k = .2;\n    vec3 p = vec3(cos(t) * (1. - abs(sin(t*k))), sin(t*k) * 1.2, sin(t) * (1. - abs(sin(t*k))));\n    return p;\n}\n\nfloat sdSphere(vec3 p, float t) {\n    return length(p - path(t)) - .1;\n}\n\nfloat sdGround(vec3 p) {\n    return p.y + 1.5;\n}\n\n//https://www.iquilezles.org/www/articles/smin/smin.htm\nfloat smin( float a, float b, float k )\n{\n    float h = clamp( 0.5+0.5*(b-a)/k, 0.0, 1.0 );\n    return mix( b, a, h ) - k*h*(1.0-h);\n}\n\nfloat map(vec3 p ) {\n    // this seems like it could be sped up, NUMBEADS impacts performance more than I expected\n    float dist = sdGround(p);\n    for(int i = 0; i < NUMBEADS; i++) {\n        float slice = float(i)/float(NUMBEADS);\n        dist = smin(dist, sdSphere(p, iTime + slice * PI2), .5);\n    }\n\treturn dist;\n}\n\nvec3 grad(vec3 p) {\n    vec2 eps = vec2(.001,0.);\n    return normalize(map(p) - vec3(map(p - eps.xyy), map(p - eps.yxy), map(p-eps.yyx)));\n}\n\nvec3 march(vec3 ro, vec3 rd) {\n    float t = 0.;\n    vec3 p;\n    for (int i = 0; i < 100; i++) {\n        p = ro + rd * t;\n        float d = map(p);\n        if (d < 0.001 || t > 100.) break;\n        t += d;\n    }\n    return p;\n}\n\n// https://www.iquilezles.org/www/articles/rmshadows/rmshadows.htm\nfloat shadow(vec3 ro, vec3 rd, float k) {\n    // start the ray a little bit away from\n    // the surface to avoid self intersection\n    float t = .1;\n    float result = 1.;\n    for (int i = 0; i < 10; i++) {\n        vec3 p = ro + rd * t;\n        float d = map(p);\n        result = min(result, k * d / t);\n        if (result < 0.001) {\n            return 0.0;\n        }\n        t += d;\n        if(t>10.){break;}\n    }\n    return result;\n}\n\nvec3 light(vec3 p, vec3 c, vec3 ld) {\n    vec3 n = grad(p);\n    float incid = dot(n, ld);\n    vec3 diffuse = c * incid;\n    // this shadow calculation also slows things down a lot (it's doing \n    // the ray march a second time from the initial contact point), \n    // wonder if there's a way to speed that up as well\n    diffuse *= shadow(p, ld, 4.);\n    return diffuse;\n}\n\n// basic y rotation used for moving the lights around\nmat3 roty(float a) {\n    return mat3(\n        cos(a), 0., -sin(a),\n        0., 1., 0.,\n        sin(a), 0., cos(a));\n}\n\nvoid mainImage(out vec4 fragColor, in vec2 fragCoord) {\n    vec2 uv = (2. * fragCoord - iResolution.xy) / iResolution.y;\n\n    vec3 ro = vec3(0., 0., 2.);\n    vec3 rd = normalize(vec3(uv, -1.));\n\n    // scene has a red and green light that rotate around the ornament\n    vec3 ld2 = normalize(vec3(-.45, .2, .45));\n    vec3 ld3 = normalize(vec3(.0, .2, -.45));\n    ld2 *= roty(iTime * .21);\n    ld3 *= roty(iTime * .21);\n    \n    // march and do lighting calcs\n    vec3 p = march(ro, rd);\n    vec3 col = light(p, vec3(16, 233, 25)/255., ld2);\n    col += light(p, vec3(227, 21, 25)/255., ld3);\n    \n    // iq's gamma\n    col = pow(col, vec3(.4545));\n    \n    fragColor = vec4(col, 1);\n}\n",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "WddSzM",
+       "date": "1571810566",
+       "viewed": 155,
+       "name": "shadetober #18 (misfit)",
+       "description": "Inktober, but with shaders",
+       "likes": 3,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "#define HEIGHT 8.0\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // we want a bunch of little cells, so we're going to\n    // scale uv to some number above 1.0 and then use fract\n    // to work within the familiar [0, 1] space\n    \n    // we also want the cells to be square-ish so to do that\n    // we define how many should fit along y and then scale the\n    // x dimension by the aspect ratio to make the space 1:1.\n    // Finally, take the floor of x so that it's an exact fit and\n    // make peace with the fact that that they're not perfectly square.\n    vec2 uv = fragCoord/iResolution.xy;\n    vec2 uvo = uv; // original uv\n    float asp = iResolution.x / iResolution.y;\n    vec2 gridScaling = vec2(floor(asp * HEIGHT), HEIGHT);\n    uv *= gridScaling;\n    \n    // keep track of where we are in the world grid\n    vec2 gridCoords = floor(uv);\n    \n    // applying fract to uv lets us work within the original little [0,1] window for each cell\n    uv = fract(uv);\n    uv -= .5;\n    \n    // our target cell is the \"misfit\"\n    const vec2 target = vec2(9., 5.);\n    \n    // background color is just the sine of the distance field for each cell\n    // we modulate it by time to make it look all freaky-deaky\n    vec3 col = vec3(sin(length(uv) * 50. - (iTime * 4.))) * .2;\n    \n    float regularCell = sign(abs(length(gridCoords - target))); // 0. if a normal cell, 1. if the misfit\n    float deformation = mix(\n        sin(iTime*13.) / .3, \n        sin((iTime + gridCoords.y)*2. - sin(uvo.x)) / .3,\n        regularCell);\n    uv *= clamp(deformation, 1., 10.);\n    vec3 mixcolor = mix(vec3(1.,1.,0.4), vec3(uvo.xy, 1.), regularCell);\n\tcol = mix(col, mixcolor, smoothstep(.5, .6, 1.-vec3(length(uv))));\n    \n    // Output to screen\n    fragColor = vec4(col,1.0);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "3sdSzM",
+       "date": "1572248365",
+       "viewed": 163,
+       "name": "shadetober #19 (sling)",
+       "description": "Inktober, but with shaders\n\nWEW not my best thanks for bearing with me through this dark time",
+       "likes": 2,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [
+         {
+          "id": "4sf3Rr",
+          "filepath": "/media/a/ad56fba948dfba9ae698198c109e71f118a54d209c0ea50d77ea546abad89c57.png",
+          "type": "texture",
+          "channel": 1,
+          "sampler": {
+           "filter": "mipmap",
+           "wrap": "repeat",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         },
+         {
+          "id": "XsBSR3",
+          "filepath": "/media/a/cb49c003b454385aa9975733aff4571c62182ccdda480aaba9a8d250014f00ec.png",
+          "type": "texture",
+          "channel": 0,
+          "sampler": {
+           "filter": "mipmap",
+           "wrap": "repeat",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         }
+        ],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "#define TINY .0001\nmat3 roty(float a) { \n    return mat3(\n        cos(a), 0., -sin(a),\n        0., 1., 0.,\n        sin(a), 0., cos(a)\n        );\n}\n\n//---- http://www.flong.com/texts/code/shapers_circ/\nfloat doubleEllipticSigmoid (float x, float a, float b){\n\n  float epsilon = 0.00001;\n  float min_param_a = 0.0 + epsilon;\n  float max_param_a = 1.0 - epsilon;\n  float min_param_b = 0.0;\n  float max_param_b = 1.0;\n  a = max(min_param_a, min(max_param_a, a)); \n  b = max(min_param_b, min(max_param_b, b));\n \n  float y = 0.;\n  if (x<=a){\n    y = b * (1. - (sqrt(a*a - x*x)/a));\n  } else {\n    y = b + ((1.-b)/(1.-a))*sqrt(pow(1.-a,2.) - pow(x-1.,2.));\n  }\n  return y;\n}\n\n// https://www.iquilezles.org/www/articles/distfunctions/distfunctions.htm of course\nvec3 opCheapBend( in vec3 p, in float k)\n{\n    float c = cos(k*p.x);\n    float s = sin(k*p.x);\n    mat2  m = mat2(c,-s,s,c);\n    return vec3(m*p.xy,p.z);\n}\n\n// this doesn't render correctly on my laptop and I have no idea why,\n// looks fine on desktop\n// float sdBox( vec3 p, vec3 b )\n// {\n//   vec3 q = abs(p) - b;\n//   return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);\n// }\n\nfloat otherSDBox (vec3 p, vec3 c, vec3 s)\n{\n    float x = max\n    (   p.x - c.x - s.x / 2.,\n        c.x - p.x - s.x / 2.\n    );\n \n    float y = max\n    (   p.y - c.y - s.y / 2.,\n        c.y - p.y - s.y / 2.\n    );\n    \n    float z = max\n    (   p.z - c.z - s.z / 2.,\n        c.z - p.z - s.z / 2.\n    );\n \n    float d = x;\n    d = max(d,y);\n    d = max(d,z);\n    return d;\n}\n\nfloat sdSphere(vec3 p) {\n    return length(p) - 1.;\n    //return length(p + vec3(0.,-clamp(sin(iTime)*10.,0.,10.),0.)) - 1.;\n}\n\nfloat sdGround(vec3 p, float k) {\n    return p.y - k;\n}\n\nfloat map(vec3 p) {\n    float fr = fract(iTime);\n    float sigx = (fr > .5 ? 1. - fr : fr) * 2.;\n    float jumpster = doubleEllipticSigmoid(sigx, .2, .51);\n    float sph = sdSphere(p + vec3(0.,-jumpster -.8,0.));\n    float wiggliwoo = (sin(iTime) + 1.) * .3 + .1;\n    float bx = otherSDBox(opCheapBend(p, -sin((4.*iTime + 2.1)) * wiggliwoo), vec3(0.,sin(iTime)*-.2,0.), vec3(5.,.1,3.));\n    //float bx = otherSDBox(opCheapBend(p, .4), vec3(0.), vec3(3.,.1,3.));\n    float d = min(bx, sph);\n    \n    return min(d, sdGround(p, -1.4));\n}\n\n// https://www.iquilezles.org/www/articles/rmshadows/rmshadows.htm\nfloat shadow(vec3 ro, vec3 rd, float k) {\n    // start the ray a little bit away from\n    // the surface to avoid self intersection\n    float t = .2;\n    float result = 1.;\n    for (int i = 0; i < 10; i++) {\n        vec3 p = ro + rd * t;\n        float d = map(p);\n        result = min(result, k * d / t);\n        if (result < 0.0001) {\n            return 0.0;\n        }\n        t += d;\n    }\n    return result;\n}\n\nvec3 grad(vec3 p) {\n    vec2 eps = vec2(TINY, 0.);\n    return normalize(map(p) - vec3(map(p - eps.xyy), map(p - eps.yxy), map(p - eps.yyx)));\n}\n\nfloat march(vec3 ro, vec3 rd) {\n    float t = 0.;\n    for (int i = 0; i < 100; i++) {\n        vec3 p = ro + rd * t;\n        float d = map(p);\n        if (d < TINY) { return t; }\n        t += d;\n    }\n    return t;\n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from 0 to 1)\n    vec2 uv = (2.*fragCoord-iResolution.xy)/iResolution.y;\n    uv += texture(iChannel1, uv + iTime).rg * .04; // a touch of distortion\n\n    // Time varying pixel color\n    vec3 col = texture(iChannel0, fragCoord/iResolution.xy).rgb * (1. - length(uv) * .5);//vec3(length(uv)*vec3(sin(iTime),1.-length(uv),.8));\n    \n    vec3 ro = vec3(0., 1., 3.);\n    // old style look straight ahead\n    // vec3 rd = normalize(vec3(uv.xy, -1.));\n    \n    // --- camera look-at ---\n    \n    // bad code ignore sleepy copied from other thing for lookat\n    float fr = fract(iTime);\n    float sigx = (fr > .5 ? 1. - fr : fr) * 2.;\n    float jumpster = doubleEllipticSigmoid(sigx, .2, .51);\n    vec3 sphc = vec3(0.,jumpster -.6 * 2.,-2.);\n    \n    vec3 look = normalize(vec3(.0,-.1,-1.));//normalize(sphc);\n    vec3 right = cross(vec3(0., 1., 0.), look);\n    vec3 up = cross(look, right);\n    vec3 rd = normalize(uv.x * right + uv.y * up + look);\n    \n    float dist = march(ro, rd);\n    if (dist < 10.) { \n        vec3 p = ro + rd * dist;\n        vec3 norm = grad(p);\n        vec3 ld = vec3(0.,1.,0.);\n        vec3 lc = vec3(1.,.97,.92);\n        float incd = dot(norm, ld);\n        float shad = shadow(p, ld, 12.);\n        col = incd * lc * shad;\n    }\n\n    // Output to screen\n    fragColor = vec4(col,1.0);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "WsdSzM",
+       "date": "1572597306",
+       "viewed": 149,
+       "name": "shadetober #20 (tread)",
+       "description": "Inktober, but with shaders",
+       "likes": 2,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "float sdRhombus( in vec2 p, in vec2 b ) \n{\n    vec2 q = abs(p);\n    float h = clamp((-2.0*dot(q,b)+dot(b,b))/dot(b,b),-1.0,1.0);\n    float d = length( q - 0.5*b*vec2(1.0-h,1.0+h) );\n    return d * sign( q.x*b.y + q.y*b.x - b.x*b.y );\n}\n\nfloat expImpulse( float k, float x )\n{\n    float h = k*x;\n    return h*exp(1.0-h);\n}\n\nfloat map (in vec2 p) {\n    float dist = 10.;\n    \n    const float spacer = .01;\n    const vec2 rhwid = vec2(.1,.2);\n    \n    const vec2 xoffs = vec2(rhwid.x + spacer, 0.);\n    for (int i = 0; i < 20; i++) {\n    vec2 yoffs = vec2(0., (rhwid.y + spacer) * float(i));\n        if (i % 2 == 0) {\n        \tdist = min(dist, sdRhombus(p + yoffs + xoffs, rhwid));\n\t\t\tdist = min(dist, sdRhombus(p + yoffs - xoffs, rhwid));\n        } else {\n        \tdist = min(dist, sdRhombus(p + yoffs, rhwid));\n        \tdist = min(dist, sdRhombus(p + yoffs + xoffs * 2., rhwid));\n\t\t\tdist = min(dist, sdRhombus(p + yoffs - xoffs * 2., rhwid));\n        }\n    }\n    \n    return dist;\n}\n\nmat2 rot(float a) {\n    return mat2(\n        cos(a), sin(a),\n        -sin(a), cos(a)\n        );\n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from 0 to 1)\n    vec2 uv = (\n        fragCoord * 2.)/iResolution.y;\n    uv.y -= 2.;\n    uv.x += .5;\n\n    // Time varying pixel color\n    vec3 col = vec3(1.,.8,0.);\n    const vec3 GRAY = vec3(.1);\n    \n    for (int i = 0; i < 7; i++) {\n        uv.x -= .6;\n        \n        vec2 uv_r = rot(.1) * uv;\n        if (map(uv_r) < .0 && abs(uv_r.x) < .25) {\n            float pulse = expImpulse(1., fract(iTime - .1 * float(i) + uv_r.y * .1));\n            col = mix(col, GRAY, 1.-pulse);\n        }\n    }\n\n    // Output to screen\n    fragColor = vec4(col,1.0);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "3dtXzM",
+       "date": "1572945185",
+       "viewed": 146,
+       "name": "shadetober #21 (treasure)",
+       "description": "Inktober, but with shaders",
+       "likes": 3,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [
+         {
+          "id": "4dX3zn",
+          "filepath": "/media/a/550a8cce1bf403869fde66dddf6028dd171f1852f4a704a465e1b80d23955663.png",
+          "type": "cubemap",
+          "channel": 1,
+          "sampler": {
+           "filter": "mipmap",
+           "wrap": "clamp",
+           "vflip": "false",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         },
+         {
+          "id": "4dXGzr",
+          "filepath": "/media/a/08b42b43ae9d3c0605da11d0eac86618ea888e62cdd9518ee8b9097488b31560.png",
+          "type": "texture",
+          "channel": 0,
+          "sampler": {
+           "filter": "mipmap",
+           "wrap": "repeat",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         }
+        ],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "#define MAXDIST 9999.\n#define GLYPHSIZE 1./16.\n\nmat3 rotx(float a) {\n    return mat3(\n        1., 0., 0.,\n        0., cos(a), sin(a),\n        0., -sin(a), cos(a)\n    );\n}\n\n// https://www.iquilezles.org/www/articles/distfunctions/distfunctions.htm\nfloat sdRoundedCylinder( vec3 p, float ra, float rb, float h )\n{\n    vec2 d = vec2( length(p.xz)-2.0*ra+rb, abs(p.y) - h );\n    return min(max(d.x,d.y),0.0) + length(max(d,0.0)) - rb;\n}\n\nfloat map(vec3 p) {\n    p *= rotx(fract(iTime * .1) * 6.283);\n    float d = MAXDIST;\n    float cylp = sdRoundedCylinder(p, .2, .01, .02);\n    return min(MAXDIST, cylp);\n}\n\nvec3 grad(vec3 p) {\n    vec2 eps = vec2(0.0001, 0.0);\n    return normalize(map(p) - vec3(map(p - eps.xyy), map(p - eps.yxy), map(p - eps.yyx)));\n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from 0 to 1)\n    vec2 uv = (fragCoord * 2. - iResolution.xy)/iResolution.y;\n    vec3 col = vec3(.1,.1,0.1);\n    \n    vec3 ro = vec3(0., 0., 1.);\n    vec3 rd = normalize(vec3(uv.xy, -1.5));\n    \n    const vec2 GLYPHS[4] = vec2[4](\n        vec2(13,14), //SMILEY\n        vec2(12,14), //STAR\n        vec2(4,13), //DOLLAR\n        vec2(5,13) //PERCENTCER\n        );\n    \n    float t = 0.;\n    for(int i = 0; i < 100; ++i) {\n        vec3 p = ro + rd * t;\n        float h = map(p);\n        if (h < 0.0001) {\n            vec3 ip = rotx(fract(-iTime * .1) * 6.283) * p;\n            vec2 uvt = ip.xz;\n            \n            vec2 glyph = GLYPHS[0] * GLYPHSIZE;\n            vec2 glyph_uv = mix(glyph, glyph + GLYPHSIZE, uvt + .5);\n            vec3 textNormal = texture(iChannel0, glyph_uv).rgb;\n            \n            vec3 shapecol = texture(iChannel1, grad(p) - textNormal).rgb * vec3(1,1,0); \n            col = mix(shapecol, col, t/10.);\n            break; \n        }\n        t += h;\n        if (t > MAXDIST) { break; }\n    }\n    \n    // Output to screen\n    fragColor = vec4(col, 1.);\n    \n    // debug view of the font texture\n    //fragColor = texture(iChannel0, fragCoord/iResolution.xy).rgba;\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "tstSDn",
+       "date": "1573112470",
+       "viewed": 193,
+       "name": "shadetober #22 (ghost)",
+       "description": "Inktober, but with shaders",
+       "likes": 13,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "#define TAU 6.283\n// https://www.iquilezles.org/www/articles/distfunctions2d/distfunctions2d.htm\n\nfloat sdUnevenCapsule(vec2 p, float r1, float r2, float h) {\n  p.x = abs(p.x);\n  float b = (r1 - r2) / h;\n  float a = sqrt(1.0 - b * b);\n  float k = dot(p, vec2(-b, a));\n  if (k < 0.0)\n    return length(p) - r1;\n  if (k > a * h)\n    return length(p - vec2(0.0, h)) - r2;\n  return dot(p, vec2(a, b)) - r1;\n}\n\nfloat sdLine(in vec2 p, in vec2 a, in vec2 b) {\n  vec2 pa = p - a, ba = b - a;\n  float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);\n  return length(pa - ba * h);\n}\n\nfloat sdArc( in vec2 p, in vec2 sca, in vec2 scb, in float ra, float rb )\n{\n    p *= mat2(sca.x,sca.y,-sca.y,sca.x);\n    p.x = abs(p.x);\n    float k = (scb.y*p.x>scb.x*p.y) ? dot(p.xy,scb) : length(p.xy);\n    return sqrt( dot(p,p) + ra*ra - 2.0*ra*k ) - rb;\n}\n\nfloat wiggles(vec2 p, float h, float freq, float amp, float speed) {\n  return p.y - (h + sin((iTime * speed + p.x) * freq) * amp);\n}\n\nfloat arms(vec2 p, float h, float l, float freq, float amp) {  \n  return sdLine(p + vec2(0., h) + vec2(0., sin(p.x * freq) * amp), vec2(-l, 0.), vec2(l, 0.)) - .1;\n}\n\nfloat map(vec2 uv) {\n  uv.x += sin((uv.y + iTime) * 4.) * .05;\n  uv.y += sin(iTime) * .2+.15;\n    \n  float dist = 100.;\n\n  float body = sdUnevenCapsule(uv + vec2(0., .2), .5, .4, .5);\n  dist = max(-dist, body);\n\n  float wigg = wiggles(uv, -.3, 8., .1, .5);\n  dist = max(-wigg, dist);\n\n  float arms = arms(uv, -.1, .7, 8., .1 * sin(iTime));\n  dist = min(arms, dist);\n    \n  float eyel = length(uv - vec2(-.18,.4 + sin(iTime) * .02)) - .1;\n  dist = max(-eyel, dist);\n    \n  float eyer = length(uv - vec2(.2,.3 + sin(iTime * 1.2) * .03)) - .1;\n  dist = max(-eyer, dist);\n    \n  float mouthwiggle = .76 + sin(iTime*3.) * .01;\n    float mouthwid = .1 + sin(iTime*2.) * .01;\n  float mouth = sdArc(uv + vec2(.04,-0.35), vec2(sin(TAU*mouthwiggle), cos(TAU*mouthwiggle)), vec2(sin(TAU* mouthwid), cos(TAU* mouthwid)), .15, .02);\n    dist = max(-mouth, dist);\n\n  return dist;\n}\n\nvoid mainImage(out vec4 fragColor, in vec2 fragCoord) {\n  // Normalized pixel coordinates (from 0 to 1)\n  vec2 uv = (2. * fragCoord - iResolution.xy) / iResolution.y;\n    \n  float ghost = map(uv);\n\n  //vec3 col = vec3(step(0.,ghost));\n  vec3 col = pow(abs(vec3(ghost)), vec3(.2));\n\n  // Output to screen\n  fragColor = vec4(col, 1.0);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "tscXW8",
+       "date": "1573203252",
+       "viewed": 191,
+       "name": "shadetober #23 (ancient)",
+       "description": "Inktober, but with shaders",
+       "likes": 2,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [
+         {
+          "id": "4dXGR8",
+          "filepath": "/media/previz/buffer00.png",
+          "type": "buffer",
+          "channel": 0,
+          "sampler": {
+           "filter": "linear",
+           "wrap": "clamp",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         }
+        ],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "// https://gist.github.com/patriciogonzalezvivo/670c22f3966e662d2f83\nfloat mod289(float x){return x - floor(x * (1.0 / 289.0)) * 289.0;}\nvec4 mod289(vec4 x){return x - floor(x * (1.0 / 289.0)) * 289.0;}\nvec4 perm(vec4 x){return mod289(((x * 34.0) + 1.0) * x);}\n    \nfloat noise(vec3 p){\n    vec3 a = floor(p);\n    vec3 d = p - a;\n    d = d * d * (3.0 - 2.0 * d);\n\n    vec4 b = a.xxyy + vec4(0.0, 1.0, 0.0, 1.0);\n    vec4 k1 = perm(b.xyxy);\n    vec4 k2 = perm(k1.xyxy + b.zzww);\n\n    vec4 c = k2 + a.zzzz;\n    vec4 k3 = perm(c);\n    vec4 k4 = perm(c + 1.0);\n\n    vec4 o1 = fract(k3 * (1.0 / 41.0));\n    vec4 o2 = fract(k4 * (1.0 / 41.0));\n\n    vec4 o3 = o2 * d.z + o1 * (1.0 - d.z);\n    vec2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);\n\n    return o4.y * d.y + o4.x * (1.0 - d.y);\n}\n\n//Value Noise (copied from https://www.shadertoy.com/view/ldKGzK)\nfloat hash( float n ) { return fract(sin(n) * 753.5453123); }\nfloat value_noise( in vec3 x )\n{\n  vec3 p = floor(x);\n  vec3 f = fract(x);\n  f = f * f * (3.0 - 2.0 * f);\n\n  float n = p.x + p.y * 157.0 + 113.0 * p.z;\n  return mix(mix(mix( hash(n +  0.0), hash(n +  1.0), f.x),\n                 mix( hash(n + 157.0), hash(n + 158.0), f.x), f.y),\n             mix(mix( hash(n + 113.0), hash(n + 114.0), f.x),\n                 mix( hash(n + 270.0), hash(n + 271.0), f.x), f.y), f.z);\n}\n\n\nfloat fbm3(vec3 p) {\n  float n = 0.0;\n  n = value_noise(p);\n\n  float a = 0.5;\n  for (int i = 0; i < 10; i++) {\n    n += a * value_noise(p);\n    p = p * 2.0;\n    a = a * 0.5;\n  }\n  return n;\n}\n\nfloat sdSphere(vec3 p, float r) {\n    return length(p) - r;\n}\n\nfloat map(vec3 p) {\n    float jerkyTime = texture(iChannel0, vec2(0.)).r;\n    float displacement = noise((p*2.+vec3(0., jerkyTime, sin(jerkyTime)))*2.) * .2;\n    float gobbler = fbm3(p) * .1;\n    return sdSphere(p, .5) - displacement - gobbler;\n}\n\nvec3 grad(vec3 p) {\n    vec2 eps = vec2(.001, 0.);\n    return normalize(map(p) - vec3(map(p - eps.xyy), map(p - eps.yxy), map(p - eps.yyx)));\n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from 0 to 1)\n    vec2 uv = (fragCoord * 2. - iResolution.xy)/iResolution.y;\n    // Time varying pixel color\n    vec3 col = (1.-vec3(length(uv)) * .7) * .4;\n    vec3 ro = vec3(0.,0.,1.2);\n    vec3 rd = normalize(vec3(uv.xy, -1.));\n    \n    vec3 ld = vec3(.2,.2,.2);\n    \n    float t = 0.;\n    int ii = 0;\n    for (int i = 0; i < 100; i++) {\n        ii++;\n        vec3 p = ro + rd * t;\n        float h = map(p);\n        if (h < .001) { \n            col = grad(p); \n            float incd = dot(col, ld);\n            col = incd * vec3(1.2, .8, 0.5) * 2.;\n            break;\n        }\n        t += h;\n        if(t > 10.) {break;}\n    }\n\n    // Output to screen\n    // col = vec3(smoothSquare(uv.x, .05));\n    fragColor = vec4(col,1.0);\n    \n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       },
+       {
+        "inputs": [
+         {
+          "id": "4dXGR8",
+          "filepath": "/media/previz/buffer00.png",
+          "type": "buffer",
+          "channel": 0,
+          "sampler": {
+           "filter": "linear",
+           "wrap": "clamp",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         }
+        ],
+        "outputs": [
+         {
+          "id": "4dXGR8",
+          "channel": 0
+         }
+        ],
+        "code": "#define PI 3.141\n\nfloat smoothSquare(float x, float delta) {\n    return (1./PI) * atan(sin(PI*2. * x * .5) / delta) + .5;\n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    float prev = texture(iChannel0, vec2(0.)).r;\n    vec3 col = vec3(prev + iTimeDelta * smoothSquare(iTime, .1) * 4.);\n    fragColor = vec4(col,1.0);\n}",
+        "name": "Buffer A",
+        "description": "",
+        "type": "buffer"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "Wtd3z4",
+       "date": "1575775266",
+       "viewed": 149,
+       "name": "shadetober #23 (ancient.b)",
+       "description": "Same as the previous \"ancient\" shader but I wanted to try the trick where you color based on how many steps your march took (which I saw here https://github.com/electricsquare/raymarching-workshop)",
+       "likes": 4,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [
+         {
+          "id": "4dXGR8",
+          "filepath": "/media/previz/buffer00.png",
+          "type": "buffer",
+          "channel": 0,
+          "sampler": {
+           "filter": "linear",
+           "wrap": "clamp",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         }
+        ],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "// https://gist.github.com/patriciogonzalezvivo/670c22f3966e662d2f83\nfloat mod289(float x){return x - floor(x * (1.0 / 289.0)) * 289.0;}\nvec4 mod289(vec4 x){return x - floor(x * (1.0 / 289.0)) * 289.0;}\nvec4 perm(vec4 x){return mod289(((x * 34.0) + 1.0) * x);}\n    \nfloat noise(vec3 p){\n    vec3 a = floor(p);\n    vec3 d = p - a;\n    d = d * d * (3.0 - 2.0 * d);\n\n    vec4 b = a.xxyy + vec4(0.0, 1.0, 0.0, 1.0);\n    vec4 k1 = perm(b.xyxy);\n    vec4 k2 = perm(k1.xyxy + b.zzww);\n\n    vec4 c = k2 + a.zzzz;\n    vec4 k3 = perm(c);\n    vec4 k4 = perm(c + 1.0);\n\n    vec4 o1 = fract(k3 * (1.0 / 41.0));\n    vec4 o2 = fract(k4 * (1.0 / 41.0));\n\n    vec4 o3 = o2 * d.z + o1 * (1.0 - d.z);\n    vec2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);\n\n    return o4.y * d.y + o4.x * (1.0 - d.y);\n}\n\n//Value Noise (copied from https://www.shadertoy.com/view/ldKGzK)\nfloat hash( float n ) { return fract(sin(n) * 753.5453123); }\nfloat value_noise( in vec3 x )\n{\n  vec3 p = floor(x);\n  vec3 f = fract(x);\n  f = f * f * (3.0 - 2.0 * f);\n\n  float n = p.x + p.y * 157.0 + 113.0 * p.z;\n  return mix(mix(mix( hash(n +  0.0), hash(n +  1.0), f.x),\n                 mix( hash(n + 157.0), hash(n + 158.0), f.x), f.y),\n             mix(mix( hash(n + 113.0), hash(n + 114.0), f.x),\n                 mix( hash(n + 270.0), hash(n + 271.0), f.x), f.y), f.z);\n}\n\nfloat sdSphere(vec3 p, float r) {\n    return length(p) - r;\n}\n\n\nfloat fbm3(vec3 p) {\n  float n = 0.0;\n  n = value_noise(p);\n\n  float a = 0.5;\n  for (int i = 0; i < 10; i++) {\n    n += a * value_noise(p);\n    p = p * 2.0;\n    a = a * 0.5;\n  }\n  return n;\n}\n\nfloat map(vec3 p) {\n    float jerkyTime = texture(iChannel0, vec2(0.)).r;\n    float displacement = noise((p*2.+vec3(0., jerkyTime, sin(jerkyTime)))*2.) * .2;\n    float gobbler = fbm3(p) * .1;\n    return sdSphere(p, .5) - displacement - gobbler;\n}\n\nvec3 grad(vec3 p) {\n    vec2 eps = vec2(.001, 0.);\n    return normalize(map(p) - vec3(map(p - eps.xyy), map(p - eps.yxy), map(p - eps.yyx)));\n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from 0 to 1)\n    vec2 uv = (fragCoord * 2. - iResolution.xy)/iResolution.y;\n    // Time varying pixel color\n    vec3 col = (1.-vec3(length(uv)) * .7) * .4;\n    vec3 ro = vec3(0.,0.,1.2);\n    vec3 rd = normalize(vec3(uv.xy, -1.));\n    \n    vec3 ld = vec3(.2,.2,.2);\n    \n    float t = 0.;\n    int ii = 0;\n    for (int i = 0; i < 100; i++) {\n        ii++;\n        vec3 p = ro + rd * t;\n        float h = map(p);\n        if (h < .001) {\n            break;\n        }\n        t += h;\n        if(t > 10.) {break;}\n    }\n    col = vec3(float(ii)/100.,0.,0.);\n\n    // Output to screen\n    fragColor = vec4(col,1.0);\n    \n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       },
+       {
+        "inputs": [
+         {
+          "id": "4dXGR8",
+          "filepath": "/media/previz/buffer00.png",
+          "type": "buffer",
+          "channel": 0,
+          "sampler": {
+           "filter": "linear",
+           "wrap": "clamp",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         }
+        ],
+        "outputs": [
+         {
+          "id": "4dXGR8",
+          "channel": 0
+         }
+        ],
+        "code": "#define PI 3.141\n\nfloat smoothSquare(float x, float delta) {\n    return (1./PI) * atan(sin(PI*2. * x * .5) / delta) + .5;\n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    float prev = texture(iChannel0, vec2(0.)).r;\n    vec3 col = vec3(prev + iTimeDelta * smoothSquare(iTime, .1) * 4.);\n    fragColor = vec4(col,1.0);\n}",
+        "name": "Buf A",
+        "description": "",
+        "type": "buffer"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "Wd3SDM",
+       "date": "1573461527",
+       "viewed": 161,
+       "name": "shadetober #24 (dizzy)",
+       "description": "Inktober, but with shaders\n\nWanted to try out Truchet tiling!",
+       "likes": 4,
+       "published": "Public API",
+       "tags": [
+        "truchet",
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [
+         {
+          "id": "4dXGzn",
+          "filepath": "/media/a/0c7bf5fe9462d5bffbd11126e82908e39be3ce56220d900f633d58fb432e56f5.png",
+          "type": "texture",
+          "channel": 0,
+          "sampler": {
+           "filter": "mipmap",
+           "wrap": "repeat",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         }
+        ],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "#define PI 3.14159\nmat2 rot(float a) { \n    return mat2(\n    cos(a), sin(a),\n        -sin(a), cos(a)\n    );\n}\n\n// gotta do a Truchet tiling amirite\n#define TAU 6.283\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    //----------------------------------- tiling and camera ------------------------------\n    // fb_uv: original framebuffer uv\n    // uv: uv of the each cell\n    // s_uv: scaled uv\n    // cell: vec2 of cell coords\n    vec2 uv = fragCoord/iResolution.xy;\n    float aspect = iResolution.x / iResolution.y;\n    uv.x *= aspect;\n    \n    vec2 fb_uv = uv;\n    float ytiles = 5. * (sin(iTime) + 2.);\n    vec2 s_uv = uv * ytiles;\n    \n    // move the \"camera\" around\n    s_uv -= ytiles * .5;\n    mat2 canvasRotation = rot(iTime);\n    s_uv *= canvasRotation;\n    s_uv += ytiles * .5;\n    s_uv += iTime * 5.;\n    \n    uv = fract(s_uv);    \n    vec2 cell = floor(s_uv);\n    \n    //----------------------------------- truchet stuff -----------------------------------\n    \n    float noise = floor(.5 + texture(iChannel0, cell * .01).r);\n    \n    // temp change origin for rotation\n    uv -= .5;\n    mat2 cellRotation = rot(TAU / 4. * noise);\n    uv *= cellRotation;\n    uv += .5;\n    \n    vec2 mouse = iMouse.xy/iResolution.xy;\n    mouse.x *= aspect;\n    \n    vec3 col = vec3(.2,.5,.9);\n    \n    const float width = 0.1;\n    const float st = (.5 - width);\n    const float en = (.5 + width);\n    const float specpower = 6.;\n    vec3 lcolor = vec3(.1, .9, 1.) * .6;\n    vec3 scolor = vec3(1.);\n    \n    vec2 lp = normalize(mouse - fb_uv);\n    vec3 lp3 = normalize(vec3(lp, 1.));\n    \n    // --- bottom left circle ---\n    float d = length(uv);\n    float t = (d - st) / (en - st);\n    t = clamp(t, 0., 1.);\n\tfloat z = sin(t * PI);\n    vec2 tang = canvasRotation * cellRotation * (normalize(uv) * (t * 2. - 1.));\n    vec3 tcol = vec3(tang.xy, z);\n    float incd = clamp(dot(tcol, lp3), 0., 1.);\n    //float masking = (1. - pow(abs(cos(PI * z/2.)), 10.));\n    // todo the \"masking\" term fixes the soft z but edges get crackly when the camera zooms out so whatev\n    col = mix(col, incd * lcolor + pow(incd, specpower) * scolor, z);\n    \n    // --- top right circle ---\n    float e = length(uv - 1.);\n    t = 1. - (e - st) / (en - st);\n    t = clamp(t, 0., 1.);\n\tz = sin(t * PI);\n    tang = canvasRotation * cellRotation * (normalize(1. - uv) * (t * 2. - 1.));\n    tcol = vec3(tang.xy, z);\n    incd = clamp(dot(tcol, lp3), 0., 1.);\n    //masking = (1. - pow(abs(cos(PI * z/2.)), 10.));\n    col = mix(col, incd * lcolor + pow(incd, specpower) * scolor, z);\n\n    // fake light\n    col *= 1.5-length(fb_uv - mouse)*.5;\n    \n    \n    fragColor = vec4(col,1.0);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "3s3SDM",
+       "date": "1573806195",
+       "viewed": 136,
+       "name": "shadetober #25 (tasty)",
+       "description": "Inktober, but with shaders",
+       "likes": 2,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "// modification of https://www.iquilezles.org/www/articles/menger/menger.htm\n\n#define MAX_DIST 4.\n\nmat3 roty(float a){\n    return mat3(\n        cos(a), 0., -sin(a),\n        0., 1., 0.,\n        sin(a), 0., cos(a)\n    );\n}\n\nfloat sdSphere(vec3 p, float r) {\n    return length(p) - r;\n}\n\nvec3 opRep( in vec3 p, in vec3 c)\n{\n    return mod(p+0.5*c,c)-0.5*c;\n}\n\nvec3 map(vec3 p) {\n    p = opRep(p, vec3(4.));\n    \n    float db = sdSphere(p, 3.2);\n    \n    float s = 1.;\n    float ssf = 3.;\n    for(int m = 0; m < 4; m++)\n    {\n        // this scales the space up and then shifts it to be\n        // in the -1, 1 range\n        vec3 a = mod(p * s, 2.) - 1.;\n        // store the overall scaling so on the next loop \n        // we can scale down relative to the previous\n        s *= ssf;\n        // todo what does this part do\n        vec3 r = ssf - ssf * abs(a);\n        \n        float cr = sdSphere(r, 3.2) / s;\n        db = max(db, -cr);\n    }\n    \n    //db = sdSphere(p, .4);\n    return vec3(db, 0., 0.);\n}\n\nvec3 grad(vec3 p) {\n    vec2 eps = vec2(.001, 0.);\n    vec3 infStep = vec3(map(p - eps.xyy).x, map(p - eps.yxy).x, map(p - eps.yyx).x);\n    return normalize(map(p).x - infStep);\n}\n\nfloat march(vec3 ro, vec3 rd) {\n    float t = 0.;\n    for(int i = 0; i < 100; i++) {\n        vec3 p = ro + rd * t;\n        vec3 d = map(p);\n        if (d.x < .001) {\n            return t;\n        }\n        t += d.x;\n        if (t > MAX_DIST) {\n        \treturn MAX_DIST;\n        }\n    }\n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from 0 to 1)\n    vec2 uv = (fragCoord * 2. - iResolution.xy)/iResolution.y;\n\n    // Time varying pixel color\n    vec3 col = vec3(0.);\n    \n    vec3 ro = vec3(cos(iTime * .1) * 2., 0., sin(iTime * .1) * 2.);\n    //vec3 ro = vec3(0., 0., 3.);\n    vec3 rd = normalize(vec3(uv.xy, -2.));\n    rd *= roty(iTime * .5);\n    rd = rd.yxz;\n    rd *= roty(iTime*.3);\n    vec3 lightPos = vec3(sin(iTime) * .1, cos(iTime) * .2, sin(iTime * 2.) * .3);\n    vec3 lightCol = vec3(1.,.7,0.1);\n        \n    float d = march(ro, rd);\n    if (d < MAX_DIST) {\n        vec3 p = ro + rd * d;\n        vec3 norm = grad(p);\n        vec3 lightDir = normalize(lightPos - p);\n        float incd = dot(norm, lightDir);\n        col = incd * lightCol * (1./(d*d));\n    }\n\n    // Output to screen\n    fragColor = vec4(col,1.0);\n}\n",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "ws3SWf",
+       "date": "1573891388",
+       "viewed": 196,
+       "name": "shadetober #26 (dark)",
+       "description": "Inktober, but with shaders",
+       "likes": 6,
+       "published": "Public API",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [
+         {
+          "id": "4sXGRn",
+          "filepath": "/media/a/95b90082f799f48677b4f206d856ad572f1d178c676269eac6347631d4447258.jpg",
+          "type": "texture",
+          "channel": 2,
+          "sampler": {
+           "filter": "mipmap",
+           "wrap": "repeat",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         },
+         {
+          "id": "4dXGzn",
+          "filepath": "/media/a/0c7bf5fe9462d5bffbd11126e82908e39be3ce56220d900f633d58fb432e56f5.png",
+          "type": "texture",
+          "channel": 0,
+          "sampler": {
+           "filter": "mipmap",
+           "wrap": "repeat",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         },
+         {
+          "id": "4dXGR8",
+          "filepath": "/media/previz/buffer00.png",
+          "type": "buffer",
+          "channel": 1,
+          "sampler": {
+           "filter": "linear",
+           "wrap": "repeat",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         }
+        ],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "#define LARGE 9999999.\nfloat sdBox(vec2 p, vec2 b) {\n    // https://www.youtube.com/watch?v=62-pRVZuS5c\n    \n    // if both components are negative then distToBox becomes 0\n    // and we add in the (non-zero) negative second term\n    vec2 d = abs(p) - b;\n    vec2 clampedToExterior = max(d, 0.);\n    float distToBox = length(clampedToExterior);\n    \n    // max(dx,dy) gives us the largest component, which could be negative\n    // if both dx and dy are negative, then the min() part gives us the negative\n    // value. if either value is positive then the min part just zeroes out this\n    // term\n    float interiorDistToBox = min(max(d.x, d.y), 0.);\n    \n    return distToBox + interiorDistToBox;\n}\n\nfloat grid(vec2 p) {\n    float pad = .4;\n    float d = sdBox(p + vec2(pad, -pad), vec2(.2));\n    d = min(d, sdBox(p + vec2(-pad, pad), vec2(.2)));\n    d = min(d, sdBox(p + vec2(pad), vec2(.2)));\n    d = min(d, sdBox(p - vec2(pad), vec2(.2)));\n    return d;\n}\n\nfloat map(vec2 p) {\n    return min(grid(p + vec2(.8, .0)), grid(p - vec2(.8, .0)));\n}\n\nvec2 march(vec2 ro, vec2 rd) {\n    vec2 t = vec2(0., LARGE);\n    for(int i = 0; i < 100; i++) {\n        vec2 p = ro + rd * t.x;\n        float d = map(p);\n        t.y = min(t.y, d);\n        if (d < .0001) { return t; }\n        t.x += d;\n    }\n    return t;\n}\n\n//https://gist.github.com/patriciogonzalezvivo/670c22f3966e662d2f83\nfloat rand(float n){return fract(sin(n) * 43758.5453123);}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from 0 to 1)\n    vec2 uv = (fragCoord * 2. - iResolution.xy)/iResolution.y;\n    vec2 lp = (iMouse.xy * 2. - iResolution.xy)/iResolution.y;\n    vec2 ld = uv - lp;\n    float d2m = length(ld);\n    \n    //vec2 rdi = vec2(uv + vec2(rand(iTime), rand(iTime + 10.)));\n\t//uv += ld * pow(texture(iChannel0, rdi).r, 10.);\n\n    // some lighting\n    vec3 ld3 = normalize(vec3(ld, .1));\n    float incd = 1.-dot(-ld3, texture(iChannel1, uv).rgb);\n    \n    vec3 col = vec3(1.-d2m) * .5 * incd * texture(iChannel2, uv*.2).rgb;\n    \n    float boxDist = map(uv);\n    vec2 marchResult = march(uv, normalize(lp - uv));\n    if( d2m > marchResult.x ) { col = vec3(0.); }\n    //col = vec3(marchResult.y);\n    if( boxDist < 0.) { col = mix(.1, .0, d2m / 2.) - vec3(step(.01, abs(boxDist))); }\n    //if( boxDist < 0.) { col = vec3(.1); }\n\n    // Output to screen\n    //col *= texture(iChannel0, vec2(uv + vec2(rand(iTime), rand(iTime + 10.)) )).r * 1.;\n    //col = texture(iChannel1, uv).rgb;\n    //col = vec3(1.-d2m) * .5 * incd;\n    fragColor = vec4(col,1.0);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       },
+       {
+        "inputs": [
+         {
+          "id": "XsXGRn",
+          "filepath": "/media/a/cd4c518bc6ef165c39d4405b347b51ba40f8d7a065ab0e8d2e4f422cbc1e8a43.jpg",
+          "type": "texture",
+          "channel": 0,
+          "sampler": {
+           "filter": "mipmap",
+           "wrap": "repeat",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         }
+        ],
+        "outputs": [
+         {
+          "id": "4dXGR8",
+          "channel": 0
+         }
+        ],
+        "code": "float height(vec2 uv) {\n    return texture(iChannel0, uv).r;\n}\n\nvec2 grad(vec2 uv) {\n    vec2 ep = vec2(0.01, 0.);\n    return normalize(\n        height(uv) - \n        vec2(height(uv - ep.xy), height(uv - ep.yx))\n    );\n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    #if 0\n    vec2 uv = fragCoord/iResolution.xy;\n    vec3 col = normalize(vec3(-grad(uv), 1.));\n    fragColor = vec4(col, 1.0);\n    #else\n    // from https://www.shadertoy.com/view/4lfSD8\n    float pstr = 2.0;\n    \n    float tstep = 1.;\n    \n    float ux = tstep / iChannelResolution[0].x;\n    float uy = tstep / iChannelResolution[0].y;\n    \n    //\n    \n    vec2 uv[9];\n    float itn[9];\n    \n    // 0 1 2\n    // 3 4 5\n    // 6 7 8\n    \n    uv[0] = vec2(-ux, -uy);\n    uv[1] = vec2(0, -uy);\n    uv[2] = vec2(ux, -uy);\n    \n    uv[3] = vec2(-ux, 0);\n  \tuv[4] = vec2(0, 0);\n    uv[5] = vec2(ux, 0);\n    \n    uv[6] = vec2(-ux, uy);\n    uv[7] = vec2(0, uy);\n    uv[8] = vec2(ux, uy);\n    \n    for(int i = 0; i < 9; i++)\n    {\n        uv[i] += fragCoord / iChannelResolution[0].xy;\n        uv[i].y = uv[i].y;\n        vec3 col = texture(iChannel0, uv[i]).rgb;\n        itn[i] = 1.0 - (col.r + col.g + col.b) * .333333;\n    }\n    \n    float nstep = 2.0;\n   \n    float nx = (itn[2] + (nstep * itn[5]) + itn[8]) - (itn[0] + (nstep * itn[3]) + itn[6]);\n    float ny = (itn[6] + (nstep * itn[7]) + itn[8]) - (itn[0] + (nstep * itn[1]) + itn[2]);\n    \n    float hx = (itn[2] + -0.25*itn[5] + itn[8]) - (itn[0] + -0.25*itn[3] + itn[6]);\n    float hy = (itn[6] + -0.25*itn[7] + itn[8]) - (itn[0] + -0.25*itn[1] + itn[2]);\n    \n    float dx = (hx + nx) / pstr;\n    float dy = (hy + ny) / pstr;\n    \n    float dz = 1.0 / pstr;\n    \n    float dstep = 0.25;\n    fragColor = normalize(vec4(dx+dstep, dy+dstep, dz, 0.0));\n    #endif\n}",
+        "name": "Buffer A",
+        "description": "",
+        "type": "buffer"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "tdcSWf",
+       "date": "1576721687",
+       "viewed": 170,
+       "name": "shadetober #27 (coat)",
+       "description": "Inktober, but with shaders\n\nHuge thanks to https://www.shadertoy.com/view/XsfGWN (furball, simesgreen in 2013-05-28), very instructive shader",
+       "likes": 5,
+       "published": "Public API",
+       "tags": [
+        "hair",
+        "fur",
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [
+         {
+          "id": "4df3Rr",
+          "filepath": "/media/a/3871e838723dd6b166e490664eead8ec60aedd6b8d95bc8e2fe3f882f0fd90f0.jpg",
+          "type": "texture",
+          "channel": 0,
+          "sampler": {
+           "filter": "mipmap",
+           "wrap": "repeat",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         },
+         {
+          "id": "Xsf3Rr",
+          "filepath": "/media/a/79520a3d3a0f4d3caa440802ef4362e99d54e12b1392973e4ea321840970a88a.jpg",
+          "type": "texture",
+          "channel": 1,
+          "sampler": {
+           "filter": "mipmap",
+           "wrap": "repeat",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         }
+        ],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "#define DMAX 9999.\n#define PI 3.14159\n#define TOR_RAD 1.\n#define TOR_WID .5\n#define ITER_STEPS 32\n\nfloat sdTorus( vec3 p, vec2 t )\n{\n  vec2 q = vec2(length(p.xy)-t.x,p.z);\n  return length(q)-t.y;\n}\n\n\nfloat map(vec4 p) {\n    float tor = sdTorus(p.xyz, vec2(TOR_RAD, TOR_WID));\n    return tor;\n}\n\nmat3 rotz(float a) {\n    return mat3(\n    \tcos(a), sin(a), 0.,\n        -sin(a), cos(a), 0.,\n        0.,      0.,     1.\n    );\n}\n\nvec4 furColor(vec3 ro, vec3 rd, float t) {\n    vec3 p = ro + rd * t;\n    vec3 acc_col = vec3(0.); // color accumulation\n    float acc_dns = 0.; // density accumulation\n    \n    // for each step in this march\n    for (int i = 0; i < ITER_STEPS; i++) {\n        // we already did the march to the surface prior to this function\n        // so at this point we know we're marching _into_ the shape:\n        // increment p by (some fraction of) rd\n        //\n        // the fraction is chosen to be the maximum length you'd have to march if the ray hit exactly\n        // along the diameter of a \"polodial slice\", divided by the number of steps\n        // (https://en.wikipedia.org/wiki/Toroidal_and_poloidal#/media/File:Toroidal_coord.png)\n        p += rd * (TOR_WID * 2. / float(ITER_STEPS));\n        \n        // check where you are in the torus ring (u)\n        float u = atan(p.y, p.x);\n\n        // check where you are in the circumferal slice (v) ... these must have actual math names right?\n        // I don't know how to do this the smart, closed-form way, but we can rotate back to the xz plane\n        // and then offset to the origin and then just do an atan\n        vec3 pointRotatedBackToXZPlane = (rotz(-u) * p) - vec3(TOR_RAD, 0., 0.);\n        float v = atan(pointRotatedBackToXZPlane.z, pointRotatedBackToXZPlane.x);\n        \n        // set aside our uvs for convenience\n        // and normalize them so they're not in [-pi, pi]\n        vec2 uvs = vec2(u, v);\n        uvs /= (2. * PI);\n        uvs += .5;\n        \n        // add some motion for __dbg and style points\n        uvs.y += iTime;\n        \n        // we also care how far we are from the center of the tube which we will use to taper the hair\n        float rad = length(pointRotatedBackToXZPlane);\n        \n        // if we've stepped outside of the torus just end, don't worry about the case where we could end up back inside\n        if (rad > TOR_WID) break;\n        \n        // taper should approach zero as we reach the edge of the region\n        // future work: I think this can be tweaked to modify the length of individual hairs\n        float taper = 1. - rad / TOR_WID ;\n        //taper = pow(taper, 1.); // __dbg\n        \n        // use the uv coords to look up density, mul density by taper so that it's less dense as the hair grows outwards\n        // smoothstep to ignore hairs that are below a certain density threshold\n        float dens = smoothstep(0.5, .8, texture(iChannel0, uvs).r) * taper;\n        \n        // use these coords to look up color in the other texture\n        // smoothstep mul to make the roots darker than the tips\n        vec3 col = texture(iChannel1, uvs).rgb * smoothstep(.1, .6, rad);\n        \n        // capacity is an interesting term, lifted from https://www.shadertoy.com/view/XsfGWN\n        // it basically biases the march such that the hair you encounter earlier in the march\n        // is more strongly represented than hair encountered later in the march. It affects\n        // both the density and the color.\n        float capacity = 1. - acc_dns;\n        \n        // mul the color by the density [0., 1.] and add it to color accumulation\n        acc_col += col * dens * capacity;\n            \n        // add density to the density accumulation\n        acc_dns += dens * capacity;\n        \n        // if we are above a density threshold in the accumulator, return color\n        if (acc_dns > .95) {\n            vec4(acc_col, acc_dns);\n        }\n    }\n    return vec4(acc_col, acc_dns);\n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    // Normalized pixel coordinates (from 0 to 1)\n    vec2 uv = (fragCoord * 2. - iResolution.xy)/iResolution.y;\n    \n    // standard camera setup\n    vec3 ro = vec3(0., 0., 2.);\n    vec3 rd = normalize(vec3(uv.xy, -1.));\n\n    // simple background\n    vec4 col = vec4(0., 0., 0., 1.);\n    \n    // standard sphere march\n    vec4 sp;\n    float t = 0.;\n    for (int i = 0; i < 100; i++) {\n        sp = vec4(ro + rd * t, 0.);\n        float d = map(sp);\n        if ( d < .001 ) {\n            // set material?\n            sp.w = 1.;\n            break;\n        }\n        t += d;\n        if (t > DMAX) {\n            break;\n        }\n    }\n    \n    if (sp.w > 0.) {\n    \tcol = furColor(ro, rd, t);\n    }\n\n    // Output to screen\n    fragColor = col;\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "wdcSWf",
+       "date": "1576924248",
+       "viewed": 169,
+       "name": "shadetober #28 (ride)",
+       "description": "Inktober, but with shaders",
+       "likes": 5,
+       "published": "Public API",
+       "tags": [
+        "pseudo",
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "// === original ===================================================================\n// const vec3 GRASS = vec3(0., .5, 0.);\n// const vec3 WHITE = vec3(1., 1., 1.);\n// const vec3 WARN = vec3(1., 1., 0.);\n// const vec3 ROAD = vec3(.2, .2, .2);\n// const vec3 KERB = vec3(1., 0., 0.);\n// const float ROWS = 20.;\n\n// vec3 scanlineRoad(in vec2 p, in float row, in float scaling)\n// {\n//     row += floor(iTime * 20.);\n//    \n// \tvec2 mirp = abs(p);\n//     mirp *= scaling;\n//    \n//     if (mirp.x < .02) { \n//         return mix(STRIPE, ROAD, mod(floor(row * .5), 2.)); \n//     }\n//     if (mirp.x < .53) { return ROAD; }\n//     if (mirp.x < .55) { \n//         return mix(STRIPE, WARN, mod(floor(row * .333333), 2.)); \n//     }\n//     if (mirp.x < .6) { return ROAD; }\n//     if (mirp.x < .64) {\n//         return mix(STRIPE, KERB, mod(row, 2.));\n//     }\n//     else { return GRASS; }\n// }\n\n// void mainImage( out vec4 fragColor, in vec2 fragCoord )\n// {\n//     // Normalized pixel coordinates (from 0 to 1)\n//     vec2 uv = (fragCoord * vec2(1., ROWS)) / iResolution.xy;\n//     uv.y *= 4.;\n    \n//     float row = floor(uv.y);\n//     // float row = pow(2.0, floor(uv.y + 1.0) * 0.07); // suggestion from jaszunio15 for a perspective tweak\n//     uv.y = fract(uv).y;\n//     uv.x -= 0.5;\n    \n//     uv.x += sin(iTime + row * .1) * .1;\n        \n//     // Time varying pixel color\n//     vec3 col = scanlineRoad(uv, row, row * .1 + 1.);\n\n//     // Output to screen\n//     fragColor = vec4(col,1.0);\n// }\n// ================================================================================\n\n// below, some code golfing suggestion from Fabrice!\n\n// --- after some code golfing... -------------------------------------------------\n\n// vec3 scanlineRoad(vec2 p, float row, float scaling)\n// {\n//     row += floor(iTime * 20.);\n// \tfloat x = abs(p.x) * scaling;\n\n//     // some features are dashed lines which are sometimes white, sometimes a different color (e.g. check the red/white kerbs).\n//     // k is a scaling factor so that the on/off state can span over multiple rows\n// #define m(C,k) mod(floor(row * k), 2.) == 0. ? WHITE : C\n\n//     return   x < .02 ? m(ROAD,.5)\n//            : x < .52 ? ROAD \n//            : x < .55 ? m(WARN,.33)\n//            : x < .6  ? ROAD\n//            : x < .68 ? m(KERB,1.)\n//            :           GRASS; \n// }\n\n// void mainImage( out vec4 fragColor, in vec2 fragCoord )\n// {\n//     vec2 uv = (fragCoord * vec2(1., 4. * ROWS)) / iResolution.xy;\n//     float row = floor(uv.y);\n//     uv.y = fract(uv.y);\n//     uv.x += .1 * sin(iTime + row * .1) - .5;\n//     fragColor.rgb = scanlineRoad(uv, row, row * .1 + 1.);\n// }\n\n// --- after more code golfing ----------------------------------------------------\n#define m(k)  int( k * (r + ceil(iTime*20.)) )%2 < 1 ? vec4(1) : //\n#define mainImage(O,u)                         \\\n    vec2  U = u/iResolution.xy;                \\\n    float r = floor(U.y*=80.),                 \\\n          x = abs( U.x + .1 * sin(iTime + r*.1) - .5 ) * (r*.1+1.); \\\n    vec4 R = O+.2;                             \\\n    O  =     x < .02 ? m(.5) R                 \\\n           : x < .52 ? R                       \\\n           : x < .55 ? m(.33) O.wwxw           \\\n           : x < .6  ? R                       \\\n           : x < .68 ? m(1.)  O.wxxw           \\\n           :           vec4(0,.5,0,1)",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "tscSWf",
+       "date": "1577265539",
+       "viewed": 149,
+       "name": "shadetober #29 (injured)",
+       "description": "Inktober, but with shaders",
+       "likes": 5,
+       "published": "Public API",
+       "tags": [
+        "fbm",
+        "domainwarping",
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "// mostly warping from https://www.iquilezles.org/www/articles/warp/warp.htm\n\n// iq noise fn\nfloat noise(vec3 p)\n{\n\tvec3 ip=floor(p);\n    p-=ip; \n    vec3 s=vec3(7,157,113);\n    vec4 h=vec4(0.,s.yz,s.y+s.z)+dot(ip,s);\n    p=p*p*(3.-2.*p); \n    h=mix(fract(sin(h)*43758.5),fract(sin(h+s.x)*43758.5),p.x);\n    h.xy=mix(h.xz,h.yw,p.y);\n    return mix(h.x,h.y,p.z); \n}\n\nfloat fbm( in vec2 x, in float hurst)\n{    \n    float gain = exp2(-hurst);\n    float f = 1.0;\n    float a = 1.0;\n    float t = 0.0;\n    for( int i=0; i < 4; i++ )\n    {\n        t += a * noise((f*x).xyy);\n        f *= 2.0;\n        a *= gain;\n    }\n    return t;\n}\n\nvoid fbms(in vec2 uv, out vec3 color) {\n    float h = 1.;\n    vec2 t1 = vec2(fbm(uv, h), fbm(uv + vec2(4.3,-2.1)*sin(iTime * .02), h));\n    vec2 t2 = vec2(fbm(uv + 2.*t1 + vec2(-1.9,3.9)*cos(iTime * .07), h),\n                   fbm(uv + 2.*t1 + vec2(2.2,3.1)*sin(iTime * .05), h));\n    float t3 = fbm(uv + 2.*t2 + vec2(5.6,1.4)*cos(iTime * .06), h);\n    color = vec3(t3, t3 - 1., t3 - 1.);\n}\n\nvoid mainImage(out vec4 fragColor, in vec2 fragCoord)\n{\n    vec2 uv = (2. * fragCoord - iResolution.xy) / iResolution.y;\n    uv *= 2.;\n\tuv += 10.;\n    vec3 c;\n    fbms(uv, c);\n    fragColor = vec4(c, 1.);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "wscSWf",
+       "date": "1580087488",
+       "viewed": 62,
+       "name": "shadetober #30 (catch)",
+       "description": "Inktober, but with shaders\n\nWanted to try some subsurface scattering stuff, https://www.alanzucconi.com/2017/08/30/fast-subsurface-scattering-1/ has a good guide!",
+       "likes": 0,
+       "published": "Public API",
+       "tags": [
+        "subsurfacescattering",
+        "sss",
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [
+         {
+          "id": "XsBSR3",
+          "filepath": "/media/a/cb49c003b454385aa9975733aff4571c62182ccdda480aaba9a8d250014f00ec.png",
+          "type": "texture",
+          "channel": 0,
+          "sampler": {
+           "filter": "mipmap",
+           "wrap": "repeat",
+           "vflip": "true",
+           "srgb": "false",
+           "internal": "byte"
+          },
+          "published": 1
+         }
+        ],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "#define MAXD 30.\n#define PI 3.141\n#define TAU 6.283\n\n#define REPETITION_PERIOD 4.\n#define HALF_PERIOD REPETITION_PERIOD * .5\n\n#define DEBUG_LIGHT_SOURCE 0\n\nmat3 roty(float a)\n{\n    return mat3(cos(a), 0., sin(a), 0., 1., 0., -sin(a), 0., cos(a));\n}\nmat3 rotx(float a)\n{\n    return mat3(1., 0., 0., 0., cos(a), sin(a), 0., -sin(a), cos(a));\n}\n\nvec3 spherical(vec3 cart)\n{\n    float rho = length(cart);\n    float theta = atan(cart.y, cart.x); // [-pi, pi]\n    float phi = acos(cart.z / rho);     // [0, pi]\n    return vec3(rho, theta, phi);\n}\n\nfloat expStep(float x, float k, float n) { return exp(-k * pow(x, n)); }\n\nfloat sphere(vec3 p, float rad) { return length(p) - rad; }\n\n\nfloat shape(vec3 p)\n{\n#if 1\n    // da experiment zone\n    //p = p.zxy;\n    mat3 rot = roty((iMouse.x / iResolution.x - .5) * 10.);\n    // mat3 rot = roty(iTime);\n    p *= rot;\n#endif\n#if 1\n    vec3 sp = spherical(p);\n\n    const float latPeaks = 5.;\n    const float latMin = .7;\n    float lateralRadius = mix(latMin, 1.0, cos(sp.y * latPeaks) * .5 + .5);\n\n    const float longPeaks = 6.;\n    const float longSpeed = 8.;\n    const float longDamp = 0.1;\n    float longitudinalWiggle = cos((sp.z * 2.) * longPeaks + iTime * longSpeed) * longDamp;\n\n    return length(p) - (lateralRadius + longitudinalWiggle);\n#else\n    return sphere(p, 1.);\n#endif\n}\n\nvec2 map(vec3 p)\n{\n    // return a distance and a material id\n    vec2 cur = vec2(MAXD, 0.);\n\n    vec2 shp = vec2(shape(p), 1.);\n    if (shp.x < cur.x)\n    {\n        cur = shp;\n    }\n\n#if DEBUG_LIGHT_SOURCE\n    vec2 dbg = vec2(sphere(p - vec3(0., 1., 3.) * roty(iTime), .01), 2.);\n    if (dbg.x < cur.x)\n    {\n        cur = dbg;\n    }\n#endif\n\n    return cur;\n}\n\nvec3 norm(vec3 p)\n{\n    vec2 ep = vec2(0.001, 0.0);\n    return normalize(\n        map(p).r - vec3(map(p - ep.xyy).r, map(p - ep.yxy).r, map(p - ep.yyx).r));\n}\n\nvec3 cell(vec3 p) { return floor((p + vec3(HALF_PERIOD)) / REPETITION_PERIOD); }\n\n// https://iquilezles.org/www/articles/distfunctions/distfunctions.htm\nvec3 opRep(in vec3 p, in vec3 c)\n{\n    vec3 localpos = mod(p + c / 2., c) - c / 2.;\n    vec3 cell = cell(p);\n    vec3 noise = texture(iChannel0, vec2(cell.x, cell.y * cell.z) * .1).rgb;\n    vec3 offs = noise - .5;\n    \n    return localpos*rotx(sin(iTime*noise.x)*noise.y) + offs*2.;\n}\n\nvec4 march(vec3 ro, vec3 rd, int invert)\n{\n    float t = 0.;\n    vec4 ret;\n\n    for (int i = 0; i < 100; i++)\n    {\n        ret.xyz = ro + rd * t;\n        vec2 d = map(opRep(ret.xyz, vec3(REPETITION_PERIOD))) * vec2(invert, 1);\n\n        if (d.x < .1)\n        {\n            ret.w = d.y;\n            break;\n        }\n\n        // only using a portion of the sphere step\n        // because I was getting a lot of errors from the\n        // shape distortion with the full step\n        t += d.x * .2f;\n\n        if (t > MAXD)\n        {\n            break;\n        }\n    }\n    return ret;\n}\n\nvec3 sss(vec3 p, vec3 rd, vec3 lp, vec3 lc)\n{\n    vec3 origP = p;\n    p = opRep(p, vec3(REPETITION_PERIOD));\n    // from https://www.alanzucconi.com/2017/08/30/fast-subsurface-scattering-1/\n    vec3 L = normalize(lp - p);\n    const float subsurfaceDistortion = .5;\n\n    // figure out if our point is the light's entry or exit\n    float inShadow = -sign(dot(norm(p), L));\n    vec3 lightEgress = march(p + (inShadow * L * .05), inShadow * L, -1).xyz;\n    vec3 lightIngress = p;\n    if (inShadow > 0.)\n    {\n        lightIngress = lightEgress;\n        lightEgress = p.xyz;\n    }\n\n    // fudging a bit but a length of 2 is about the max width of this shape\n    // todo currently unused\n    // float thickness = length(lightEgress - lightIngress) / 2.;\n    vec3 N = norm(lightEgress);\n\n    vec3 cell = cell(origP);\n    vec3 noiseOffset =\n        texture(iChannel0, vec2(cell.x, cell.y + cell.z) * .1).rgb-.5;\n    vec3 basecolor = vec3(.6, 1., .2) + noiseOffset;\n\n    float lightAlign = max(0., dot(norm(p.xyz), L));\n\n    vec3 I_sss =\n        max(0., dot(rd, normalize(L + N * subsurfaceDistortion))) * basecolor;\n    vec3 I_diff = lightAlign * basecolor;\n\n    vec3 refl = reflect(L, norm(p.xyz));\n    float specAlign = abs(dot(rd, refl)); // abs so we get shinies on both sides\n    float I_spec = pow(specAlign, 50.);\n\n    return I_sss + I_diff + I_spec;\n}\n\nvoid mainImage(out vec4 fragColor, in vec2 fragCoord)\n{\n    vec2 uv = (fragCoord * 2. - iResolution.xy) / iResolution.y;\n\tvec3 bgcol = vec3(.4,.6, 0.);\n    vec3 col = bgcol;\n\n    vec3 ro = vec3(0., 0., -1.);\n    vec3 rd = normalize(vec3(uv.xy, -2.));\n\n    // start the march a little ahead of the\n    // actual ro to enforce a near plane\n    vec4 p = march(ro + rd * 2., rd, 1);\n\n    vec3 lp = vec3(0., 0., -3.);\n    vec3 lc = vec3(1., 1., .878);\n    lp *= roty(iTime);\n\n    if (p.w == 1.)\n    {\n        col = sss(p.xyz, rd, lp, lc);\n    }\n#if DEBUG_LIGHT_SOURCE\n    if (p.w == 2.)\n    {\n        col = lc;\n    }\n#endif\n    \n    col = mix(col, bgcol, length(p.xyz)/MAXD);\n    col *= 1.-length((uv+vec2(sin(iTime),0.))*.25);\n\n    fragColor = vec4(col, 1.0);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "td3XWf",
+       "date": "0",
+       "viewed": 0,
+       "name": "shadetober #31 (ripe)",
+       "description": "Inktober, but with shaders",
+       "likes": 0,
+       "published": "Private",
+       "tags": [
+        "inktober",
+        "shadertober",
+        "shadetober",
+        "inktober2019"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "#define FAR 30.\n#define TAU 6.283\n#define REPETITION_PERIOD 2.3\n#define HALF_PERIOD REPETITION_PERIOD * .5\nvec3 cell(vec3 p) { return floor((p + vec3(HALF_PERIOD)) / REPETITION_PERIOD); }\n\nmat3 roty(float a)\n{\n    return mat3(cos(a), 0., sin(a), 0., 1., 0., -sin(a), 0., cos(a));\n}\n\nmat3 rotx(float a)\n{\n    return mat3(1., 0., 0., 0., cos(a), sin(a), 0., -sin(a), cos(a));\n}\n\n// https://www.iquilezles.org/www/articles/distfunctions/distfunctions.htm\nfloat opSmoothSubtraction( float d1, float d2, float k ) {\n    float h = clamp(0.5 - 0.5 * ( d2 + d1 ) / k, 0.0, 1.0 );\n    return mix( d2, -d1, h ) + k * h * (1.0 - h); \n}\n\n// shane's compact version of iq's 3d noise\nfloat n3D(vec3 p){\n\tconst vec3 s = vec3(7, 157, 113);\n\tvec3 ip = floor(p); p -= ip; \n    vec4 h = vec4(0., s.yz, s.y + s.z) + dot(ip, s);\n    p = p*p*(3. - 2.*p); //p *= p*p*(p*(p * 6. - 15.) + 10.);\n    h = mix(fract(sin(h)*43758.5453), fract(sin(h + s.x)*43758.5453), p.x);\n    h.xy = mix(h.xz, h.yw, p.y);\n    return mix(h.x, h.y, p.z); // Range: [0, 1].\n}\n\n// https://www.iquilezles.org/www/articles/distfunctions/distfunctions.htm\nfloat sdCappedCone(vec3 p, vec3 a, vec3 b, float ra, float rb) {\n  float rba = rb - ra;\n  float baba = dot(b - a, b - a);\n  float papa = dot(p - a, p - a);\n  float paba = dot(p - a, b - a) / baba;\n  float x = sqrt(papa - paba * paba * baba);\n  float cax = max(0.0, x - ((paba < 0.5) ? ra : rb));\n  float cay = abs(paba - 0.5) - 0.5;\n  float k = rba * rba + baba;\n  float f = clamp((rba * (x - ra) + paba * baba) / k, 0.0, 1.0);\n  float cbx = x - ra - f * rba;\n  float cby = paba - f;\n  float s = (cbx < 0.0 && cay < 0.0) ? -1.0 : 1.0;\n  return s *\n         sqrt(min(cax * cax + cay * cay * baba, cbx * cbx + cby * cby * baba));\n}\n\n// https://www.iquilezles.org/www/articles/distfunctions/distfunctions.htm\nfloat sdRoundCone( vec3 p, float r1, float r2, float h )\n{\n  vec2 q = vec2( length(p.xz), p.y );\n    \n  float b = (r1-r2)/h;\n  float a = sqrt(1.0-b*b);\n  float k = dot(q,vec2(-b,a));\n    \n  if( k < 0.0 ) return length(q) - r1;\n  if( k > a*h ) return length(q-vec2(0.0,h)) - r2;\n        \n  return dot(q, vec2(a,b) ) - r1;\n}\n\nfloat blueberry(vec3 p) {\n    vec3 bp = p;\n    bp.z *= 1.2;\n    float base = length(bp) - 1. + n3D(p.xyy*2.)*.1;\n    \n    vec3 sp = p;\n    sp.xy *= (2.5 + sin(atan(sp.y,sp.x)*5.6)*.3);\n    float starcap = sdCappedCone(sp, vec3(0.,0.,.6), vec3(0.,0.,1.0), .7, .1);\n    \n    vec3 tp = p;\n    tp.z += .8;\n    float butt = length(tp) - .05;\n    \n    float pass1 = opSmoothSubtraction(starcap, base, .1);\n    return opSmoothSubtraction(butt, pass1, .05);\n}\n\nfloat rubus(vec3 p) {\n    vec3 bp = p;\n    bp.y += .5;\n    float base = sdRoundCone( bp, .8, 1., .8 );\n    \n    vec3 cp = p;\n    cp.y -= .3;\n    float remove = sdRoundCone( cp, .4, .5, .7 );\n    \n    base = opSmoothSubtraction(remove, base, .1);\n    return base - n3D(p)*.1;\n    \n    // how to map cone?\n    //vec2 voruv = vec2(.5 + atan(p.x, p.z)/TAU, p.y);\n    //float voroffset = 0.;//1.-vor(voruv*vec2(4.,1.)*.2);\n    \n    //return base - smoothstep(0.,1.,voroffset)*.1;\n}\n\n// https://iquilezles.org/www/articles/distfunctions/distfunctions.htm\nvec3 opRep(in vec3 p, in vec3 c)\n{\n    vec3 cell = cell(p);\n    vec3 localpos = mod(p + c / 2., c) - c / 2.;\n    localpos *= roty(sin(iTime)*5. * p.y);\n    //vec3 noise = texture(iChannel0, vec2(cell.x, cell.y * cell.z) * .1).rgb;\n    //vec3 offs = noise - .5;\n    \n    return localpos;//*rotx(sin(iTime*noise.x)*noise.y) + offs*2.;\n}\n\nvec2 map(vec3 p) {\n\tvec3 local = opRep(p, vec3(REPETITION_PERIOD, REPETITION_PERIOD, 0.));\n    vec3 c = cell(p);\n    if (mod(c.x, 3.) == 0.)\n        return vec2(blueberry(local), 1.);\n    \n    if (mod(c.x, 3.) == 1.)\n        return vec2(rubus(local), 2.);\n    \n    if (mod(c.x, 3.) == 2.)\n        return vec2(rubus(local), 3.);\n}\n\nvec3 norm(vec3 p) {\n    vec2 eps = vec2(.001, .0);\n    return normalize(map(p).x - vec3(map(p - eps.xyy).x,\n                                   map(p - eps.yxy).x,\n                                   map(p - eps.yyx).x));\n}\n\nvec3 bluebColor(vec3 p) {\n    vec3 base = vec3(20.,45.,246.)/255.;\n    vec3 mottling = (2.+vec3(n3D(p*6.)));\n    return base * mottling * pow(length(p), 10.);\n}\n\nvec3 blakbColor(vec3 p) {\n    vec3 base = vec3(2.,1.,5.)/255.;\n    vec3 mottling = (2.+vec3(n3D(p*6.)));\n    return base * mottling;\n}\n\nvec3 raspbColor(vec3 p) {\n    vec3 base = vec3(154.,13.,10.)/255.;\n    vec3 mottling = (2.+vec3(n3D(p*6.)));\n    return base * mottling;\n}\n\nvec3 color(vec3 p, vec3 rd, float mat) {\n    vec3 diff = vec3(0.);\n    vec3 pLocal = opRep(p, vec3(REPETITION_PERIOD));\n    \n    if (mat == 1.) { diff = bluebColor(pLocal); }\n    else if (mat == 2.) { diff =  raspbColor(pLocal); }\n    else if (mat == 3.) { diff =  blakbColor(pLocal); }\n    \n    vec3 lp = vec3(1.,1.,4.);\n    //vec3 lc = vec3(1.);\n    \n    vec3 n = norm(p);\n    vec3 p2l = normalize(lp - p);\n    \n    vec3 diffLit = diff * max(0., dot(n, p2l));\n    vec3 spec = vec3( pow(max(0.,dot(reflect(-rd, n), -p2l)), 100.) );\n    \n    return max(mat3(.6,.2,.2,2.,.6,.2,.2,.2,.6)*diff*.1, diffLit + spec);\n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    vec2 uv = (2.*fragCoord-iResolution.xy)/iResolution.y;\n\n    vec3 col = vec3(.5);\n    \n    vec3 ro = vec3(0., 0., 10.);\n    vec3 rd = normalize(vec3(uv, -2.));\n   \n    #if 1\n    vec2 mouserot = iMouse.xy*8./iResolution.xy - 4.;\n    ro *= (roty(mouserot.x) * rotx(mouserot.y));\n    rd *= (roty(mouserot.x) * rotx(mouserot.y));\n    #endif\n    \n    for (float t = 0.; t < FAR;) {\n        vec3 p = ro + rd * t;\n        \n        vec2 dmat = map(p);\n        if (dmat.x < .01) { col = color(p, rd, dmat.y); break; }\n        t+=dmat.x*.85;\n    }\n    col = pow(col, vec3(.4545));\n    fragColor = vec4(col,1.0);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     },
+     {
+      "ver": "0.1",
+      "info": {
+       "id": "WldSzB",
+       "date": "0",
+       "viewed": 0,
+       "name": "terrain march",
+       "description": "Experimenting with terrain marching",
+       "likes": 0,
+       "published": "Private",
+       "tags": [
+        "terrain"
+       ]
+      },
+      "renderpass": [
+       {
+        "inputs": [],
+        "outputs": [
+         {
+          "id": "4dfGRr",
+          "channel": 0
+         }
+        ],
+        "code": "// Compact, self-contained version of IQ's 3D value noise function.\nfloat n3D(vec3 p){\n    \n\tconst vec3 s = vec3(7, 157, 113);\n\tvec3 ip = floor(p); p -= ip; \n    vec4 h = vec4(0., s.yz, s.y + s.z) + dot(ip, s);\n    p = p*p*(3. - 2.*p); //p *= p*p*(p*(p * 6. - 15.) + 10.);\n    h = mix(fract(sin(h)*43758.5453), fract(sin(h + s.x)*43758.5453), p.x);\n    h.xy = mix(h.xz, h.yw, p.y);\n    return mix(h.x, h.y, p.z); // Range: [0, 1].\n}\n\nfloat height(vec3 p) {\n    //return sin(p.x) * sin(p.z);\n    //return texture(iChannel0, p.xz).r * .25;\n    return n3D(p.xzz);\n    \n}\n\nfloat map(vec3 p) {\n    return p.y - height(p);\n}\n\nvec3 norm(vec3 p) {\n    vec2 eps = vec2(.01, .0);\n    return normalize(map(p) - vec3(map(p - eps.xyy),\n                                   map(p - eps.yxy),\n                                   map(p - eps.yyx)));\n}\n\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n    vec2 uv = (2.*fragCoord-iResolution.xy)/iResolution.y;\n\n    vec3 col = vec3(.2);\n    \n    vec3 ro = vec3(0.2, .15, -iTime*.25);\n    ro.y += height(ro);\n    vec3 rd = normalize(vec3(uv, -1.));\n    \n    for (float t = 0.; t < 10.; t+=.01) {\n        vec3 p = ro + rd * t;\n        float h = height(p);\n        if (p.y < h) { col = norm(p); break; }\n    }\n    \n    fragColor = vec4(col,1.0);\n}",
+        "name": "Image",
+        "description": "",
+        "type": "image"
+       }
+      ]
+     }
+    ]
+   }
