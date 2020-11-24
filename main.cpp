@@ -8,9 +8,7 @@
 #include <cmath>
 
 #include "shader.h"
-
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb/stb_image.h"
+#include "texture.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -71,23 +69,9 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    // set up a texture
-    unsigned int texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    int width, height, channelCount;
-    unsigned char *data = stbi_load("res/wall.jpg", &width, &height, &channelCount, 0);
-    if (data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    } else {
-        std::cout << "Failed to load texture" << std::endl;
-    }    
-    stbi_image_free(data);
+    textures::init();
+    unsigned int tex0 = textures::genTex("res/wall.jpg");
+    unsigned int tex1 = textures::genTex("res/debug.jpg");
 
     Shader shader{"res/shaders/main.vert", "res/shaders/main.frag"};
 
@@ -100,6 +84,8 @@ int main() {
         
     float res[] = {SCR_WIDTH, SCR_HEIGHT};
     shader.activate();
+    shader.setInt("tex0", 0);
+    shader.setInt("tex1", 1);
 
     while(!glfwWindowShouldClose(window)) {
         processInput(window);
@@ -107,12 +93,17 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         float timeValue = glfwGetTime();
-        float scalt = (sin(timeValue) / 2.0f) + 1.f;
+        float scalt = (sin(timeValue) * 0.5f) + .5f;
         shader.activate();
         shader.setFloat("scaling", scalt);
         shader.setFloat("iTime", timeValue);
         shader.setFloat("xOffset", sin(timeValue));
-        glBindTexture(GL_TEXTURE_2D, texture);
+        
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, tex0);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, tex1);
+
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
