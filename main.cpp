@@ -91,8 +91,6 @@ int main() {
     shader.setInt("tex0", 0);
     shader.setInt("tex1", 1);
 
-    glm::mat4 transform = glm::mat4(1.0f);
-
     while(!glfwWindowShouldClose(window)) {
         processInput(window);
 
@@ -105,8 +103,21 @@ int main() {
         shader.setFloat("iTime", timeValue);
         shader.setFloat("xOffset", 0.f);//sin(timeValue));
 
-        transform = glm::rotate(transform, .001f, glm::vec3(0.f, 0.f, 1.f));
-        shader.setMat4("transform", glm::value_ptr(transform));
+        glm::mat4 local = glm::mat4(1.0f);
+        local = glm::rotate(local, timeValue, glm::vec3(0.f, 0.f, 1.f));
+        shader.setMat4("local", glm::value_ptr(local));
+
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.f, 0.f));
+        shader.setMat4("model", glm::value_ptr(model));
+
+        glm::mat4 view = glm::mat4(1.0f);
+        view = glm::translate(view, glm::vec3(0.f,0.f,-2.f + scalt));
+        shader.setMat4("view", glm::value_ptr(view));
+
+        glm::mat4 proj;
+        proj = glm::perspective(glm::radians(45.f), 800.f/600.f, 0.1f, 1000.f);
+        shader.setMat4("proj", glm::value_ptr(proj));
         
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, tex0);
