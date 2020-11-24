@@ -10,8 +10,6 @@
 const char *vertexShaderSource;
 const char *fragmentShaderSource;
 
-constexpr unsigned int NUM_VERT_ELEMENTS = 6;
-
 void loadShader(const char *fn, const char **store)
 {
     FILE *f = fopen(fn, "rb");
@@ -26,19 +24,6 @@ void loadShader(const char *fn, const char **store)
 
     *store = result;
 };
-
-// void std_loadShader(const char* path, const char** result) {
-//     std::string code;
-//     std::ifstream file;
-//     file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-//     try {
-//         file.open(path);
-//         std::stringstream stream;
-//         stream << file.rdbuf();
-//         file.close();
-//         code = stream.str();
-//     }
-// }
 
 class Shader
 {
