@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(learnopengl)
+project(spengine)
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -11,10 +11,10 @@ elseif(WIN32)
 	include_directories(F:\\vcpkg\\installed\\x64-windows\\include)
 endif()
 
-add_executable(learnopengl main.cpp glad.c)
+add_executable(spengine main.cpp glad.c)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-	target_link_libraries(learnopengl glfw)
+	target_link_libraries(spengine glfw)
 elseif(WIN32)
-	target_link_libraries(learnopengl glfw3)
+	target_link_libraries(spengine glfw3)
 endif()

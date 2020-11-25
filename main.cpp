@@ -36,7 +36,7 @@ int main()
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
 #endif
 
-    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Spengine", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create window " << glfwGetVersionString() << std::endl;
@@ -213,7 +213,7 @@ int main()
         glBindVertexArray(VAOWisp);
 
         glm::mat4 view = glm::mat4(1.0f);
-        view = glm::translate(view, glm::vec3(0.f, .6f, -5.f));
+        view = glm::translate(view, glm::vec3(0.f, .6f, -2.f));
         view = glm::rotate(view, timeValue, glm::vec3(0.f,1.f,0.f));
         shader.setMat4("view", glm::value_ptr(view));
 
