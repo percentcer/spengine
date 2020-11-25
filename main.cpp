@@ -14,6 +14,9 @@
 #include "shader.h"
 #include "texture.h"
 
+#define CGLTF_IMPLEMENTATION
+#include "stb/cgltf.h"
+
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
 
@@ -132,18 +135,56 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    textures::init();
-    unsigned int tex0 = textures::genTex("res/wall.jpg");
-    unsigned int tex1 = textures::genTex("res/debug.jpg");
-
-    Shader shader{"res/shaders/main.vert", "res/shaders/main.frag"};
-
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, NUM_VERT_ELEMENTS * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
     // glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, NUM_VERT_ELEMENTS * sizeof(float), (void*)(3 * sizeof(float)));
     // glEnableVertexAttribArray(1);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, NUM_VERT_ELEMENTS * sizeof(float), (void *)(3 * sizeof(float)));
     glEnableVertexAttribArray(2);
+
+    // create the wisp gltf
+    unsigned int VAOWisp;
+    glGenVertexArrays(1, &VAOWisp);
+    glBindVertexArray(VAOWisp);
+
+    unsigned int VBOWisp;
+    glGenBuffers(1, &VBOWisp);
+    glBindBuffer(GL_ARRAY_BUFFER, VBOWisp);
+
+    unsigned int EBOWisp;
+    glGenBuffers(1, &EBOWisp);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOWisp);
+
+    cgltf_options options = {};
+    cgltf_data* data = NULL;
+    cgltf_result result = cgltf_parse_file(&options, "res/wisp.gltf", &data);
+    if (result == cgltf_result_success) {
+        cgltf_result result = cgltf_load_buffers(&options, data, "res/wisp.gltf");
+        if (result != cgltf_result_success) {
+            std::cout << "failed to load gltf buffers\n" << std::endl;
+        }
+        cgltf_mesh& mesh = data->meshes[0];
+        cgltf_primitive& prim = mesh.primitives[0];
+
+        cgltf_accessor positions = data->accessors[0];
+        cgltf_accessor uvs = data->accessors[2];
+
+        glBufferData(GL_ARRAY_BUFFER, data->buffers[0].size, data->buffers[0].data, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, prim.indices->buffer_view->size, (void*)(((char*)data->buffers[0].data) + prim.indices->buffer_view->offset), GL_STATIC_DRAW);
+
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, positions.stride, (void *)positions.buffer_view->offset);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, uvs.stride, (void *)uvs.buffer_view->offset);
+        glEnableVertexAttribArray(2);
+    } else {
+        std::cout << "failed to load wisp.gltf" << std::endl;
+    }
+
+    textures::init();
+    unsigned int tex0 = textures::genTex("res/face.jpg");
+    unsigned int tex1 = textures::genTex("res/debug.jpg");
+
+    Shader shader{"res/shaders/main.vert", "res/shaders/main.frag"};
 
     float res[] = {SCR_WIDTH, SCR_HEIGHT};
     shader.activate();
@@ -169,10 +210,10 @@ int main()
         glBindTexture(GL_TEXTURE_2D, tex1);
 
         glBindVertexArray(VAO);
-        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glBindVertexArray(VAOWisp);
 
         glm::mat4 view = glm::mat4(1.0f);
-        view = glm::translate(view, glm::vec3(0.f, 0.f, -5.f));
+        view = glm::translate(view, glm::vec3(0.f, .6f, -5.f));
         view = glm::rotate(view, timeValue, glm::vec3(0.f,1.f,0.f));
         shader.setMat4("view", glm::value_ptr(view));
 
@@ -189,10 +230,24 @@ int main()
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, cubePositions[i]);
             shader.setMat4("model", glm::value_ptr(model));
-            glDrawArrays(GL_TRIANGLES, 0, 36);
+            glDrawElements(GL_TRIANGLES, 62424, GL_UNSIGNED_SHORT, NULL);
+            // glDrawArrays(GL_TRIANGLES, 0, 36);
         }
-        glBindVertexArray(0);
 
+        // // draw the wisp
+        // {
+        //     glBindVertexArray(VAOWisp);
+            
+        //     glm::mat4 local = glm::mat4(1.0f);
+        //     shader.setMat4("local", glm::value_ptr(local));
+
+        //     glm::mat4 model = glm::mat4(1.0f);
+        //     shader.setMat4("model", glm::value_ptr(model));
+
+        //     glDrawElements(GL_TRIANGLES, 62424, GL_UNSIGNED_SHORT, NULL);
+        // }
+
+        glBindVertexArray(0);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
