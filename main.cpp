@@ -31,6 +31,10 @@ glm::vec3 cameraPos = glm::vec3(0.f, 0.f, 3.f);
 glm::vec3 cameraFront = glm::vec3(0.f, 0.f, -1.f);
 glm::vec3 cameraUp = glm::vec3(0.f, 1.f, 0.f);
 
+// time stuff
+float dt = 0.f;
+float tLast = 0.f;
+
 int main()
 {
     glfwInit();
@@ -204,12 +208,15 @@ int main()
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        float timeValue = glfwGetTime();
-        float scalt = (sin(timeValue) * 0.5f) + .5f;
+        const float iTime = glfwGetTime();
+        dt = iTime - tLast;
+        tLast = iTime;
+
+        const float scaling = (sin(iTime) * 0.5f) + .5f;
         shader.activate();
-        shader.setFloat("scaling", scalt);
-        shader.setFloat("iTime", timeValue);
-        shader.setFloat("xOffset", 0.f); //sin(timeValue));
+        shader.setFloat("scaling", scaling);
+        shader.setFloat("iTime", iTime);
+        shader.setFloat("xOffset", 0.f);
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, tex0);
@@ -229,7 +236,7 @@ int main()
         for (int i = 0; i < 10; i++)
         {
             glm::mat4 local = glm::mat4(1.0f);
-            local = glm::rotate(local, timeValue * float(i+.1f) * .2f, glm::vec3(0.45f, 0.45f, .0f));
+            local = glm::rotate(local, iTime * float(i+.1f) * .2f, glm::vec3(0.45f, 0.45f, .0f));
             shader.setMat4("local", glm::value_ptr(local));
 
             glm::mat4 model = glm::mat4(1.0f);
@@ -260,7 +267,7 @@ void processInput(GLFWwindow *window)
         glfwSetWindowShouldClose(window, true);
     }
     
-    const float camSpeed = .1f;
+    const float camSpeed = 3.f * dt;
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
     {
         cameraPos += camSpeed * cameraFront;
