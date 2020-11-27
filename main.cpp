@@ -26,6 +26,11 @@ const unsigned int SCR_HEIGHT = 600;
 
 constexpr unsigned int NUM_VERT_ELEMENTS = 5;
 
+// camera stuff
+glm::vec3 cameraPos = glm::vec3(0.f, 0.f, 3.f);
+glm::vec3 cameraFront = glm::vec3(0.f, 0.f, -1.f);
+glm::vec3 cameraUp = glm::vec3(0.f, 1.f, 0.f);
+
 int main()
 {
     glfwInit();
@@ -63,6 +68,7 @@ int main()
     //                     -.5f,  .5f, 0.f,    1.f, 0.f, 1.f,    0.f, 1.f,
     //                     };
 
+    // box verts
     float vertices[] = {
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
         0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
@@ -137,6 +143,7 @@ int main()
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, NUM_VERT_ELEMENTS * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
+    // (old, was vert colors)
     // glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, NUM_VERT_ELEMENTS * sizeof(float), (void*)(3 * sizeof(float)));
     // glEnableVertexAttribArray(1);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, NUM_VERT_ELEMENTS * sizeof(float), (void *)(3 * sizeof(float)));
@@ -209,12 +216,10 @@ int main()
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, tex1);
 
-        glBindVertexArray(VAO);
+        // glBindVertexArray(VAO);
         glBindVertexArray(VAOWisp);
 
-        glm::mat4 view = glm::mat4(1.0f);
-        view = glm::translate(view, glm::vec3(0.f, .6f, -2.f));
-        view = glm::rotate(view, timeValue, glm::vec3(0.f,1.f,0.f));
+        glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
         shader.setMat4("view", glm::value_ptr(view));
 
         glm::mat4 proj;
@@ -233,19 +238,6 @@ int main()
             glDrawElements(GL_TRIANGLES, 62424, GL_UNSIGNED_SHORT, NULL);
             // glDrawArrays(GL_TRIANGLES, 0, 36);
         }
-
-        // // draw the wisp
-        // {
-        //     glBindVertexArray(VAOWisp);
-            
-        //     glm::mat4 local = glm::mat4(1.0f);
-        //     shader.setMat4("local", glm::value_ptr(local));
-
-        //     glm::mat4 model = glm::mat4(1.0f);
-        //     shader.setMat4("model", glm::value_ptr(model));
-
-        //     glDrawElements(GL_TRIANGLES, 62424, GL_UNSIGNED_SHORT, NULL);
-        // }
 
         glBindVertexArray(0);
         glfwSwapBuffers(window);
@@ -266,5 +258,31 @@ void processInput(GLFWwindow *window)
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     {
         glfwSetWindowShouldClose(window, true);
+    }
+    
+    const float camSpeed = .1f;
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    {
+        cameraPos += camSpeed * cameraFront;
+    }
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) 
+    {
+        cameraPos += -glm::cross(cameraFront, cameraUp) * camSpeed;
+    }
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) 
+    {
+        cameraPos += -camSpeed * cameraFront;
+    }
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) 
+    {
+        cameraPos += glm::cross(cameraFront, cameraUp) * camSpeed;
+    }
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) 
+    {
+        cameraPos += camSpeed * cameraUp;
+    }
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) 
+    {
+        cameraPos += -camSpeed * cameraUp;
     }
 }
